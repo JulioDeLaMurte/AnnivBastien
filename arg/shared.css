@@ -349,18 +349,20 @@ input[type="range"]::-webkit-slider-thumb {
 .av-bubble {
   background: white;
   border: 3px solid var(--ink);
-  padding: 10px 14px;
-  max-width: 190px;
+  padding: 14px 18px;
+  max-width: 300px;
+  min-width: 200px;
   font-family: "Special Elite", serif;
-  font-size: 13px;
-  line-height: 1.5;
+  font-size: 16px;
+  line-height: 1.55;
   color: var(--ink);
   position: absolute;
-  bottom: calc(100% + 8px);
+  bottom: calc(100% + 10px);
   left: 50%;
   transform: translateX(-50%);
   transform-origin: bottom center;
   pointer-events: none;
+  box-shadow: 3px 3px 0 var(--ink);
 }
 .av-bubble::after {
   content: "";

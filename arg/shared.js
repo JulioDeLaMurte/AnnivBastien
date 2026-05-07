@@ -137,7 +137,7 @@ class PhotoAvatar {
     this.bubbleTimeout = setTimeout(() => {
       bubble.style.display = 'none';
       this.speaking = false;
-    }, 9000);
+    }, 14000);
   }
 
   cycle() {
@@ -314,7 +314,7 @@ class JulesAvatar { // c'est moi (Jules) qui réagis aux actions de Bastien
     if (this.bubbleTimeout) clearTimeout(this.bubbleTimeout);
     this.bubbleTimeout = setTimeout(() => {
       bubble.style.display = 'none';
-    }, 9000);
+    }, 14000);
   }
 
   cycle(expr) {
