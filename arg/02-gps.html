@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>ÉTAPE 1 - LA PROMENADE</title>
+  <link rel="stylesheet" href="shared.css" />
+  <style>
+    .sat-map {
+      width: 100%;
+      aspect-ratio: 16/7;
+      background: #1a2a1a;
+      border: 3px solid var(--ink);
+      position: relative;
+      overflow: hidden;
+      margin: 24px 0;
+    }
+
+    .coord-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .field-wrap {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .headline-box {
+      border: 3px solid var(--ink);
+      padding: 12px 18px;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .step-badge {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 48px;
+      line-height: 1;
+      color: var(--red);
+      flex-shrink: 0;
+    }
+
+    .terrain-label {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 13px;
+      letter-spacing: 0.2em;
+      color: rgba(180, 220, 180, 0.7);
+      text-align: center;
+      margin-top: 8px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="newslines"></div>
+  <div class="page">
+
+    <div class="paper-header">
+      <span class="paper-name">LE BASTIEN QUOTIDIEN</span>
+      <span class="paper-date">ÉTAPE 1 / 7 - 07H30</span>
+      <span class="stamp">EN COURS</span>
+    </div>
+
+    <div class="headline-box">
+      <span class="step-badge">01</span>
+      <div>
+        <div class="tabloid-title" style="font-size:clamp(30px,5vw,58px);">LA PROMENADE DU CHIEN</div>
+        <div class="byline">Chronique canine - Alsace, quelque part</div>
+      </div>
+    </div>
+
+    <p class="body-text">
+      En cette matinée, Bastien qui garde son chien pour la semaine décide de le sortir et de faire une balade autour de
+      chez lui à Colmar.
+      Malheureusement, alors que qu'il s'arrette pour admirer une superbe <bold>SUZUKI gsxr</bold>, le chien
+      s'échappe. Ce dernier aurait été aperçu près du batiment ci dessous. 
+      Retrouve ce lieu sur Google Maps et entre les coordonnées exactes.
+    </p>
+
+    <img src="../uploads/sat-map.png" alt="Carte satellite" class="sat-map" />
+    <div class="terrain-label">VUE SATELLITE - ACTIVÉE</div>
+
+    <div class="coord-grid">
+      <div class="field-wrap">
+        <label class="field-label" for="lat">Latitude</label>
+        <input type="text" id="lat" placeholder="48.XXXX" autocomplete="off" />
+      </div>
+      <div class="field-wrap">
+        <label class="field-label" for="lng">Longitude</label>
+        <input type="text" id="lng" placeholder="7.XXXX" autocomplete="off" />
+      </div>
+    </div>
+
+    <button class="btn-big" onclick="validate()">VALIDER LES COORDONNÉES</button>
+    <div id="feedback"></div>
+
+    <hr class="rule" style="margin-top:32px" />
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <a href="01-intro.html" style="font-family:'Special Elite',serif;font-size:13px;color:var(--ink-light);">←
+        Retour</a>
+      <span style="font-family:'Special Elite',serif;font-size:12px;color:var(--ink-light);opacity:0.5;">Étape
+        1/7</span>
+    </div>
+  </div>
+
+  <div id="victory-overlay">
+    <div class="victory-title" id="victory-title">✓ RÉSOLU !</div>
+    <div class="victory-subtitle" id="victory-sub"></div>
+  </div>
+
+  <div id="juliette-avatar"></div>
+  <div id="jules-avatar"></div>
+
+  <script src="shared.js"></script>
+  <script>
+    checkAccess(1);
+
+    const jules = new PhotoAvatar('jules-avatar', '../uploads/avatar_file-1777938267546.JPG', 'Jules', [
+      "07h30. Premier acte de la journée. Le chien et lui. Dans le froid.",
+      "Google Maps, vue satellite. C'est tout ce qu'il te faut.",
+      "Colmar. Son quartier. Pas loin de chez lui du tout.",
+      "Il fait ça CHAQUE matin. Même endroit. Même heure. C'est touchant et inquiétant.",
+    ], {
+      correct: ["Exact ! Il y va chaque matin, c'est son rituel sacré. 🐕"],
+      wrong: ["Non... T'es encore loin. Cherche dans son quartier à Colmar."],
+    });
+
+    const juliette = new PhotoAvatar('juliette-avatar', '../uploads/juliette.png', 'Juliette', [
+      "GPS activé ! Zone cible : Colmar, Alsace 🗺️",
+      "Il est tellement prévisible c'est presque touchant.",
+      "Latitude + Longitude. Vue satellite. Tu vas trouver !",
+    ], {
+      correct: ["Bastien localisé avec précision ! 📍"],
+      wrong: ["Chaud ou froid ? Cherche encore !"],
+    });
+
+    setTimeout(() => jules.cycle(), 3000);
+    setTimeout(() => juliette.cycle(), 6500);
+
+    function validate() {
+      const la = parseFloat(document.getElementById('lat').value.replace(',', '.'));
+      const lo = parseFloat(document.getElementById('lng').value.replace(',', '.'));
+      const fb = document.getElementById('feedback');
+
+      if (isNaN(la) || isNaN(lo)) {
+        fb.textContent = '';
+        const p = document.createElement('p');
+        p.className = 'feedback-err';
+        p.textContent = '🤦 Ces coordonnées ne ressemblent à rien. Essaie des vrais chiffres.';
+        fb.appendChild(p);
+        jules.react('wrong');
+        return;
+      }
+
+      const ok = Math.abs(la - 48.0861) < 0.009 && Math.abs(lo - 7.3433) < 0.009;
+
+      if (ok) {
+        jules.react('correct');
+        setTimeout(() => juliette.react('correct'), 600);
+        showVictory("Bastien localisé ! Le chien promené, il rentre chercher sa moto. C'est là que ça se gâte. 🏍️", () => goToNext(1));
+      } else {
+        jules.react('wrong');
+        const dist = Math.round(Math.sqrt(Math.pow((la - 48.0861) * 111, 2) + Math.pow((lo - 7.3433) * 75, 2)) * 1000);
+        fb.textContent = '';
+        const p = document.createElement('p');
+        p.className = 'feedback-err';
+        p.textContent = `Non. T'es à environ ${dist < 5000 ? dist + ' mètres' : 'des kilomètres'} de la bonne réponse. ${dist < 500 ? '🔥 Chaud !' : dist < 2000 ? '🌡️ Tiède.' : '🧊 Froid.'}`;
+        fb.appendChild(p);
+      }
+    }
+
+    document.getElementById('lat').addEventListener('keydown', e => { if (e.key === 'Enter') document.getElementById('lng').focus(); });
+    document.getElementById('lng').addEventListener('keydown', e => { if (e.key === 'Enter') validate(); });
+  </script>
+</body>
+
+</html>

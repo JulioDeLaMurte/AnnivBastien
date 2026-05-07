@@ -1,0 +1,930 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>ÉTAPE 2 - LA MOTO</title>
+  <link rel="stylesheet" href="shared.css" />
+  <style>
+    .game-wrap {
+      border: 3px solid var(--ink);
+      position: relative;
+      margin: 24px 0;
+      overflow: hidden;
+      background: #d4eaf4;
+      box-shadow: 0 4px 0 rgba(0, 0, 0, 0.15);
+    }
+
+    canvas {
+      display: block;
+      width: 100%;
+      cursor: pointer;
+      image-rendering: auto;
+    }
+
+    .game-overlay {
+      position: absolute;
+      inset: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 14px;
+      background: rgba(212, 234, 244, 0.94);
+      padding: 16px;
+      text-align: center;
+    }
+
+    .timer-hud {
+      position: absolute;
+      top: 10px;
+      right: 14px;
+      font-family: 'Bebas Neue', sans-serif;
+      background: rgba(255, 255, 255, 0.88);
+      padding: 4px 10px 3px;
+      border: 2px solid var(--ink);
+      display: flex;
+      gap: 6px;
+      align-items: baseline;
+      box-shadow: 2px 2px 0 var(--ink);
+    }
+
+    .t-label {
+      font-size: 12px;
+      color: var(--ink-light);
+      letter-spacing: 1.5px;
+    }
+
+    .t-value {
+      font-size: 26px;
+      color: var(--red);
+      line-height: 1;
+      min-width: 36px;
+      text-align: right;
+    }
+
+    .controls-hint {
+      position: absolute;
+      top: 10px;
+      left: 14px;
+      font-family: 'Special Elite', serif;
+      font-size: 11px;
+      color: var(--ink-light);
+      background: rgba(255, 255, 255, 0.8);
+      border: 1px solid var(--ink);
+      padding: 3px 8px;
+    }
+
+    .count-input-row {
+      display: flex;
+      gap: 12px;
+      align-items: flex-end;
+      margin-top: 16px;
+      flex-wrap: wrap;
+    }
+
+    .headline-box {
+      border: 3px solid var(--ink);
+      padding: 12px 18px;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .step-badge {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 48px;
+      line-height: 1;
+      color: var(--red);
+      flex-shrink: 0;
+    }
+
+    .crash-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 56px;
+      letter-spacing: 4px;
+      color: var(--red);
+      text-shadow: 3px 3px 0 var(--ink);
+      line-height: 1;
+    }
+
+    .end-blurb {
+      font-family: 'Special Elite', serif;
+      font-size: 14px;
+      color: var(--ink-light);
+      max-width: 440px;
+      margin: 0;
+    }
+
+    .end-foot {
+      font-family: 'Special Elite', serif;
+      font-size: 11px;
+      color: var(--ink-light);
+      opacity: 0.7;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="newslines"></div>
+  <div class="page">
+
+    <div class="paper-header">
+      <span class="paper-name">LE BASTIEN QUOTIDIEN</span>
+      <span class="paper-date">ÉTAPE 2 / 7 - 08H15</span>
+      <span class="stamp">DANGER</span>
+    </div>
+
+    <div class="headline-box">
+      <span class="step-badge">02</span>
+      <div>
+        <div class="tabloid-title" style="font-size:clamp(28px,5vw,55px);">IL ROULE. TROP VITE.</div>
+        <div class="byline">Chronique motocycliste - Quasiment plus de points</div>
+      </div>
+    </div>
+
+    <p class="body-text">
+      Le chien rentré, Bastien enfile son casque. Direction le boulot à moto, comme tous les matins.
+      Il a <strong>quasiment plus de points</strong> sur son permis, et ce matin la route est semée de pièges.
+      <br>
+      <br>
+
+      <strong>Tiens 60 secondes</strong>, saute par-dessus chaque obstacle, un seul contact et c'est l'accident.
+      <br>
+      <br>
+
+      Et pendant que tu y es : <strong>compte les oiseaux qui passent</strong>.
+      <br>
+      Personne ne te dira combien il y en a.
+    </p>
+
+    <div class="game-wrap" id="game-wrap">
+      <canvas id="moto-canvas" width="800" height="220"></canvas>
+      <div class="game-overlay" id="game-overlay">
+        <div class="tabloid-title" style="font-size:36px;">PRÊT À ROULER ?</div>
+        <p style="font-family:'Special Elite',serif;font-size:13px;color:var(--ink-light);max-width:420px;margin:0">
+          ESPACE ou CLIC pour sauter. Évite tout ce qui dépasse. Compte les oiseaux. Tiens 60 secondes.
+        </p>
+        <button class="btn-big" onclick="startGame()">DÉMARRER</button>
+      </div>
+      <div class="timer-hud" id="timer-hud" style="display:none">
+        <span class="t-label">TEMPS</span><span class="t-value" id="tm-num">60</span>
+      </div>
+      <div class="controls-hint" id="controls-hint" style="display:none">⎵ / clic = saut</div>
+    </div>
+
+    <div id="answer-zone" style="display:none">
+      <div class="count-input-row">
+        <div style="flex:0 0 200px">
+          <label class="field-label">Combien d'oiseaux ?</label>
+          <input type="number" id="bird-answer" placeholder="?" min="0" max="99" />
+        </div>
+        <button class="btn-big" onclick="checkBirds()">VALIDER</button>
+        <button class="btn-hint" onclick="startGame()">↺ Recommencer</button>
+      </div>
+      <div id="bird-feedback"></div>
+    </div>
+
+    <hr class="rule" style="margin-top:32px" />
+    <div style="display:flex;justify-content:space-between;align-items:center">
+      <a href="02-gps.html" style="font-family:'Special Elite',serif;font-size:13px;color:var(--ink-light);">←
+        Retour</a>
+      <span style="font-family:'Special Elite',serif;font-size:12px;color:var(--ink-light);opacity:0.5;">Étape
+        2/7</span>
+    </div>
+  </div>
+
+  <div id="victory-overlay">
+    <div class="victory-title" id="victory-title">✓ RÉSOLU !</div>
+    <div class="victory-subtitle" id="victory-sub"></div>
+  </div>
+  <div id="juliette-avatar"></div>
+  <div id="jules-avatar"></div>
+
+  <script src="shared.js"></script>
+  <script>
+    checkAccess(2);
+
+    const jules = new PhotoAvatar('jules-avatar', '../uploads/avatar_file-1777938267546.JPG', 'Jules', [
+      "08h15. Il quitte la maison. Le chien dort déjà. Le casque, lui, est sur la tête.",
+      "Il roule trop vite. Je compte même plus les PV, c'est trop déprimant.",
+      "Saute. Lui il saute jamais les limitations de vitesse. Si si il les saute.",
+      "Et compte les piafs. Discrètement. Personne te dira combien il y en a.",
+    ], {
+      correct: ["Exact ! Le bon nombre d'oiseaux. Bon compteur. Mauvais conducteur. 🐦"],
+      wrong: ["Raté. Recompte. Et essaie de pas mourir cette fois."],
+    });
+    const juliette = new PhotoAvatar('juliette-avatar', '../uploads/juliette.png', 'Juliette', [
+      "Après la promenade, le sport extrême : sa moto.",
+      "ESPACE pour sauter ! Et garde un œil sur le ciel, hein.",
+      "Un seul obstacle touché et c'est game over. Joli.",
+      "60 secondes pour rejoindre le bureau. Tu peux y arriver. Enfin j'espère.",
+    ], {
+      correct: ["Bien joué ! Tu as un meilleur sens de l'observation que lui sur sa moto. 😅"],
+      wrong: ["Recompte ! Les oiseaux passent vite, mais ils passent."],
+    });
+
+    // ========== Game constants ==========
+    const W = 800, H = 220;
+    const ROAD_TOP = 175;
+    const GND = 140;
+    const MX = 100;
+    const GAME_DURATION = 60000;
+    const JUMP_V = -11;
+    const GRAVITY = 0.55;
+
+    // ========== State ==========
+    let frame = 0;
+    let motoY = GND, velY = 0, jumping = false, jumpCount = 0;
+    let birds = [], obstacles = [], clouds = [], hills = [];
+    let birdCount = 0;
+    let speed = 3.5;
+    let elapsed = 0, lastTime = 0;
+    let nextBirdMs = 0, nextObstMs = 0;
+    let running = false, finished = false, lost = false;
+    let raf = null;
+    let crashAt = null;
+
+    // ========== Helpers (safe DOM) ==========
+    function clearChildren(el) {
+      while (el.firstChild) el.removeChild(el.firstChild);
+    }
+
+    function makeEl(tag, opts) {
+      const el = document.createElement(tag);
+      if (opts) {
+        if (opts.className) el.className = opts.className;
+        if (opts.text != null) el.textContent = opts.text;
+        if (opts.style) el.setAttribute('style', opts.style);
+        if (opts.onClick) el.addEventListener('click', opts.onClick);
+      }
+      return el;
+    }
+
+    // ========== Lifecycle ==========
+    function startGame() {
+      frame = 0;
+      motoY = GND; velY = 0; jumping = false; jumpCount = 0;
+      birds = []; obstacles = []; birdCount = 0;
+      speed = 3.5; elapsed = 0;
+      nextBirdMs = 900 + Math.random() * 1400;
+      nextObstMs = 1900 + Math.random() * 1100;
+      running = true; finished = false; lost = false;
+      crashAt = null;
+
+      clouds = [
+        { x: 180, y: 32, w: 64, sp: 0.30 },
+        { x: 460, y: 52, w: 84, sp: 0.22 },
+        { x: 700, y: 24, w: 50, sp: 0.36 },
+      ];
+      hills = [
+        { x: 0, w: 260, h: 52 },
+        { x: 240, w: 200, h: 36 },
+        { x: 460, w: 290, h: 64 },
+        { x: 740, w: 220, h: 42 },
+      ];
+
+      document.getElementById('game-overlay').style.display = 'none';
+      document.getElementById('answer-zone').style.display = 'none';
+      const fb = document.getElementById('bird-feedback');
+      clearChildren(fb);
+      document.getElementById('timer-hud').style.display = 'flex';
+      document.getElementById('controls-hint').style.display = 'block';
+      document.getElementById('tm-num').textContent = '60';
+
+      lastTime = performance.now();
+      if (raf) cancelAnimationFrame(raf);
+      raf = requestAnimationFrame(loop);
+      jules.cycle();
+    }
+
+    function jump() {
+      if (!running || finished || lost) return;
+      if (jumping) return;
+      velY = JUMP_V;
+      jumping = true;
+      jumpCount++;
+    }
+
+    window.addEventListener('keydown', e => {
+      if (e.code === 'Space' || e.code === 'ArrowUp') {
+        e.preventDefault();
+        if (!running && !finished && !lost) startGame();
+        else jump();
+      }
+    });
+    document.getElementById('moto-canvas').addEventListener('click', () => {
+      if (running) jump();
+      else if (!finished && !lost) startGame();
+    });
+
+    function lose() {
+      if (lost) return;
+      lost = true; running = false;
+      crashAt = { x: MX + 6, y: motoY + 6, t: 0 };
+      document.getElementById('timer-hud').style.display = 'none';
+      document.getElementById('controls-hint').style.display = 'none';
+
+      const survivedSec = (elapsed / 1000).toFixed(1);
+      const start = performance.now();
+      function crashAnim(now) {
+        const t = now - start;
+        crashAt.t = t;
+        drawAll();
+        if (t < 700) requestAnimationFrame(crashAnim);
+        else {
+          const overlay = document.getElementById('game-overlay');
+          clearChildren(overlay);
+          overlay.appendChild(makeEl('div', { className: 'crash-title', text: 'CRASH !' }));
+          overlay.appendChild(makeEl('p', {
+            className: 'end-blurb',
+            text: "Bastien a percuté quelque chose à pleine balle. La voiture banalisée n'était pas loin.",
+          }));
+          overlay.appendChild(makeEl('button', {
+            className: 'btn-big',
+            text: '↺ RECOMMENCER',
+            onClick: startGame,
+          }));
+          overlay.appendChild(makeEl('span', {
+            className: 'end-foot',
+            text: `Tu as tenu ${survivedSec}s`,
+          }));
+          overlay.style.display = 'flex';
+          jules.react('wrong');
+        }
+      }
+      requestAnimationFrame(crashAnim);
+    }
+
+    function win() {
+      if (finished) return;
+      finished = true; running = false;
+      document.getElementById('timer-hud').style.display = 'none';
+      document.getElementById('controls-hint').style.display = 'none';
+
+      const overlay = document.getElementById('game-overlay');
+      clearChildren(overlay);
+      overlay.appendChild(makeEl('div', {
+        className: 'tabloid-title',
+        text: 'ARRIVÉ EN UN MORCEAU.',
+        style: 'font-size:38px',
+      }));
+      const p = makeEl('p', { className: 'end-blurb' });
+      p.appendChild(document.createTextNode(
+        `60 secondes au compteur, ${jumpCount} sauts, zéro accident. Maintenant la vraie question : `));
+      const strong = makeEl('strong', { text: "combien d'oiseaux as-tu croisés ?" });
+      p.appendChild(strong);
+      overlay.appendChild(p);
+      overlay.style.display = 'flex';
+
+      document.getElementById('answer-zone').style.display = 'block';
+      jules.react('correct');
+    }
+
+    // ========== Main loop ==========
+    function loop(now) {
+      if (!running || finished || lost) return;
+      const dt = Math.min(50, now - lastTime);
+      lastTime = now;
+      elapsed += dt;
+      frame++;
+
+      const t = elapsed / GAME_DURATION;
+      speed = 3.5 + Math.pow(t, 0.85) * 6.0;
+
+      motoY += velY;
+      velY += GRAVITY;
+      if (motoY >= GND) { motoY = GND; velY = 0; jumping = false; }
+
+      nextBirdMs -= dt;
+      if (nextBirdMs <= 0) {
+        const yPos = 22 + Math.random() * 70;
+        const ownSpeed = 1.0 + Math.random() * 1.2;
+        birds.push({
+          x: W + 24,
+          y: yPos,
+          baseY: yPos,
+          vx: -(speed * 0.55 + ownSpeed),
+          phase: Math.random() * Math.PI * 2,
+          wing: Math.random() * Math.PI * 2,
+          size: 0.85 + Math.random() * 0.4,
+          counted: false,
+        });
+        const minGap = Math.max(550, 1100 - elapsed / 80);
+        nextBirdMs = minGap + Math.random() * 1700;
+      }
+
+      nextObstMs -= dt;
+      if (nextObstMs <= 0) {
+        const roll = Math.random();
+        const type = roll < 0.55 ? 'cone' : (roll < 0.85 ? 'rock' : 'barrel');
+        obstacles.push({ x: W + 30, type });
+        const minGap = Math.max(800, 2100 - elapsed / 45);
+        nextObstMs = minGap + Math.random() * 700;
+      }
+
+      birds.forEach(b => {
+        b.x += b.vx;
+        b.y = b.baseY + Math.sin(b.x * 0.04 + b.phase) * 5;
+        b.wing += 0.32;
+        if (!b.counted && b.x < MX + 10) { b.counted = true; birdCount++; }
+      });
+      birds = birds.filter(b => b.x > -50);
+
+      obstacles.forEach(o => { o.x -= speed; });
+      obstacles = obstacles.filter(o => o.x > -60);
+
+      clouds.forEach(c => { c.x -= c.sp; if (c.x < -120) c.x = W + 120 + Math.random() * 80; });
+      hills.forEach(h => {
+        h.x -= speed * 0.18;
+        if (h.x + h.w < -60) h.x = W + 80 + Math.random() * 120;
+      });
+
+      const motoLeft = MX - 22, motoRight = MX + 22;
+      const motoTop = motoY - 4;
+      const motoBottom = motoY + 35;
+      for (const o of obstacles) {
+        const dim = obstacleBox(o.type);
+        const oL = o.x - dim.w / 2;
+        const oR = o.x + dim.w / 2;
+        const oT = ROAD_TOP - dim.h;
+        const oB = ROAD_TOP;
+        if (oR > motoLeft && oL < motoRight && oT < motoBottom && oB > motoTop) {
+          lose();
+          return;
+        }
+      }
+
+      if (elapsed >= GAME_DURATION) {
+        win();
+        return;
+      }
+
+      drawAll();
+      const remaining = Math.max(0, Math.ceil((GAME_DURATION - elapsed) / 1000));
+      document.getElementById('tm-num').textContent = remaining;
+
+      raf = requestAnimationFrame(loop);
+    }
+
+    function obstacleBox(type) {
+      if (type === 'cone') return { w: 22, h: 28 };
+      if (type === 'rock') return { w: 34, h: 22 };
+      if (type === 'barrel') return { w: 26, h: 32 };
+      return { w: 24, h: 24 };
+    }
+
+    // ========== Drawing ==========
+    function drawAll() {
+      const canvas = document.getElementById('moto-canvas');
+      const ctx = canvas.getContext('2d');
+
+      const sky = ctx.createLinearGradient(0, 0, 0, ROAD_TOP);
+      sky.addColorStop(0, '#b9d6ec');
+      sky.addColorStop(1, '#ecf3f8');
+      ctx.fillStyle = sky;
+      ctx.fillRect(0, 0, W, ROAD_TOP);
+
+      ctx.fillStyle = 'rgba(0,0,0,0.04)';
+      for (let x = 0; x < W; x += 8)
+        for (let y = 0; y < ROAD_TOP; y += 8)
+          ctx.fillRect(x, y, 2, 2);
+
+      hills.forEach(h => {
+        ctx.fillStyle = '#9ab388';
+        ctx.beginPath();
+        ctx.moveTo(h.x, ROAD_TOP);
+        ctx.quadraticCurveTo(h.x + h.w * 0.5, ROAD_TOP - h.h, h.x + h.w, ROAD_TOP);
+        ctx.closePath();
+        ctx.fill();
+        ctx.fillStyle = 'rgba(0,0,0,0.07)';
+        ctx.beginPath();
+        ctx.moveTo(h.x + h.w * 0.45, ROAD_TOP - h.h * 0.85);
+        ctx.quadraticCurveTo(h.x + h.w * 0.7, ROAD_TOP - h.h * 0.55, h.x + h.w * 0.85, ROAD_TOP - h.h * 0.2);
+        ctx.lineTo(h.x + h.w * 0.85, ROAD_TOP);
+        ctx.lineTo(h.x + h.w * 0.45, ROAD_TOP);
+        ctx.closePath();
+        ctx.fill();
+      });
+
+      clouds.forEach(c => {
+        ctx.fillStyle = 'rgba(255,255,255,0.88)';
+        ctx.beginPath();
+        ctx.ellipse(c.x, c.y, c.w / 2, 11, 0, 0, Math.PI * 2);
+        ctx.ellipse(c.x + 16, c.y - 6, c.w / 3, 9, 0, 0, Math.PI * 2);
+        ctx.ellipse(c.x - 14, c.y - 4, c.w / 4, 8, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.strokeStyle = 'rgba(0,0,0,0.18)';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.ellipse(c.x, c.y, c.w / 2, 11, 0, 0, Math.PI * 2);
+        ctx.stroke();
+      });
+
+      ctx.fillStyle = '#2a2a2a';
+      ctx.fillRect(0, ROAD_TOP, W, 26);
+      ctx.fillStyle = '#f4c842';
+      ctx.fillRect(0, ROAD_TOP - 1, W, 2);
+      ctx.fillStyle = '#dcdcdc';
+      const dashOffset = (frame * speed) % 70;
+      for (let x = -dashOffset; x < W; x += 70) ctx.fillRect(x, ROAD_TOP + 11, 36, 3);
+      ctx.fillStyle = '#7a6a40';
+      ctx.fillRect(0, ROAD_TOP + 26, W, H - ROAD_TOP - 26);
+      ctx.fillStyle = '#5a8a30';
+      ctx.fillRect(0, ROAD_TOP + 26, W, 4);
+
+      ctx.fillStyle = 'rgba(0,0,0,0.18)';
+      for (let i = 0; i < 12; i++) {
+        const px = ((i * 73 - frame * speed * 0.6) % W + W) % W;
+        ctx.fillRect(px, ROAD_TOP + 30 + (i % 3) * 2, 2, 2);
+      }
+
+      obstacles.forEach(o => drawObstacle(ctx, o));
+
+      ctx.strokeStyle = 'rgba(0,0,0,0.28)';
+      ctx.lineWidth = 1.5;
+      ctx.lineCap = 'round';
+      for (let i = 0; i < 5; i++) {
+        const y = motoY + 6 + i * 7;
+        const len = 10 + ((frame * 3 + i * 11) % 14);
+        ctx.beginPath();
+        ctx.moveTo(MX - 32 - i * 8, y);
+        ctx.lineTo(MX - 32 - i * 8 - len, y);
+        ctx.stroke();
+      }
+
+      drawMoto(ctx, motoY);
+      birds.forEach(b => drawBird(ctx, b));
+      if (lost && crashAt) drawCrash(ctx, crashAt);
+    }
+
+    function drawMoto(ctx, my) {
+      const airFactor = Math.max(0, (GND - my) / 110);
+      const shadowScale = 1 - airFactor * 0.6;
+      ctx.fillStyle = `rgba(0,0,0,${0.22 - airFactor * 0.12})`;
+      ctx.beginPath();
+      ctx.ellipse(MX + 2, ROAD_TOP + 7, 28 * shadowScale, 4 * shadowScale, 0, 0, Math.PI * 2);
+      ctx.fill();
+
+      const wheelY = my + 24;
+      drawWheel(ctx, MX - 18, wheelY, 11);
+      drawWheel(ctx, MX + 22, wheelY, 11);
+
+      ctx.fillStyle = '#888';
+      ctx.beginPath();
+      ctx.moveTo(MX - 26, my + 16);
+      ctx.lineTo(MX - 10, my + 14);
+      ctx.lineTo(MX - 10, my + 19);
+      ctx.lineTo(MX - 26, my + 21);
+      ctx.closePath();
+      ctx.fill();
+      ctx.strokeStyle = '#1a1a1a';
+      ctx.lineWidth = 1;
+      ctx.stroke();
+      ctx.fillStyle = '#2c2c2c';
+      ctx.beginPath();
+      ctx.ellipse(MX - 26, my + 18.5, 2.5, 3, 0, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.fillStyle = '#3a3a3a';
+      ctx.fillRect(MX - 6, my + 14, 18, 9);
+      ctx.strokeStyle = '#1a1a1a';
+      ctx.lineWidth = 1;
+      ctx.strokeRect(MX - 6, my + 14, 18, 9);
+
+      ctx.fillStyle = '#1a1a1a';
+      ctx.beginPath();
+      ctx.moveTo(MX - 16, my + 14);
+      ctx.lineTo(MX - 6, my + 8);
+      ctx.lineTo(MX + 18, my + 8);
+      ctx.lineTo(MX + 26, my + 14);
+      ctx.lineTo(MX + 22, my + 22);
+      ctx.lineTo(MX - 12, my + 22);
+      ctx.closePath();
+      ctx.fill();
+
+      const grad = ctx.createLinearGradient(0, my - 4, 0, my + 14);
+      grad.addColorStop(0, '#e74c3c');
+      grad.addColorStop(1, '#a02818');
+      ctx.fillStyle = grad;
+      ctx.beginPath();
+      ctx.moveTo(MX - 14, my + 12);
+      ctx.lineTo(MX - 6, my + 2);
+      ctx.lineTo(MX + 14, my - 2);
+      ctx.lineTo(MX + 26, my + 6);
+      ctx.lineTo(MX + 24, my + 14);
+      ctx.lineTo(MX + 6, my + 16);
+      ctx.closePath();
+      ctx.fill();
+      ctx.strokeStyle = '#1a1a1a';
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+
+      ctx.fillStyle = '#f5f5f5';
+      ctx.beginPath();
+      ctx.moveTo(MX - 6, my + 6);
+      ctx.lineTo(MX + 14, my + 2);
+      ctx.lineTo(MX + 18, my + 5);
+      ctx.lineTo(MX - 4, my + 9);
+      ctx.closePath();
+      ctx.fill();
+
+      ctx.fillStyle = '#fff8c8';
+      ctx.beginPath();
+      ctx.ellipse(MX + 24, my + 8, 4, 3.2, -0.1, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.strokeStyle = '#1a1a1a';
+      ctx.lineWidth = 1;
+      ctx.stroke();
+      ctx.fillStyle = '#fff';
+      ctx.beginPath();
+      ctx.arc(MX + 23, my + 7, 1.2, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.strokeStyle = '#1a1a1a';
+      ctx.lineWidth = 2.5;
+      ctx.lineCap = 'round';
+      ctx.beginPath();
+      ctx.moveTo(MX + 16, my + 1);
+      ctx.lineTo(MX + 22, my - 6);
+      ctx.stroke();
+      ctx.fillStyle = '#1a1a1a';
+      ctx.beginPath();
+      ctx.arc(MX + 22, my - 6, 2, 0, Math.PI * 2);
+      ctx.fill();
+
+      ctx.fillStyle = '#2c3e50';
+      ctx.beginPath();
+      ctx.moveTo(MX - 4, my + 4);
+      ctx.lineTo(MX + 4, my - 14);
+      ctx.lineTo(MX + 16, my - 12);
+      ctx.lineTo(MX + 14, my + 2);
+      ctx.closePath();
+      ctx.fill();
+      ctx.strokeStyle = '#1a1a1a';
+      ctx.lineWidth = 1;
+      ctx.stroke();
+
+      ctx.fillStyle = '#c0392b';
+      ctx.beginPath();
+      ctx.moveTo(MX + 4, my - 14);
+      ctx.lineTo(MX + 14, my - 12);
+      ctx.lineTo(MX + 12, my - 8);
+      ctx.lineTo(MX + 4, my - 10);
+      ctx.closePath();
+      ctx.fill();
+
+      ctx.strokeStyle = '#2c3e50';
+      ctx.lineWidth = 4;
+      ctx.lineCap = 'round';
+      ctx.beginPath();
+      ctx.moveTo(MX + 12, my - 10);
+      ctx.lineTo(MX + 19, my - 4);
+      ctx.stroke();
+      ctx.strokeStyle = '#1a1a1a';
+      ctx.lineWidth = 1;
+      ctx.stroke();
+
+      ctx.fillStyle = '#1a1a1a';
+      ctx.beginPath();
+      ctx.arc(MX + 11, my - 18, 8.5, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.beginPath();
+      ctx.moveTo(MX + 4, my - 16);
+      ctx.lineTo(MX + 18, my - 14);
+      ctx.lineTo(MX + 16, my - 10);
+      ctx.lineTo(MX + 6, my - 12);
+      ctx.closePath();
+      ctx.fill();
+      ctx.fillStyle = '#5dade2';
+      ctx.beginPath();
+      ctx.ellipse(MX + 14, my - 18, 5.5, 3.2, -0.25, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.strokeStyle = '#1a1a1a';
+      ctx.lineWidth = 1;
+      ctx.stroke();
+      ctx.fillStyle = 'rgba(255,255,255,0.7)';
+      ctx.beginPath();
+      ctx.ellipse(MX + 12, my - 19, 1.6, 0.8, -0.3, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.strokeStyle = '#c0392b';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.moveTo(MX + 4, my - 22);
+      ctx.lineTo(MX + 18, my - 20);
+      ctx.stroke();
+    }
+
+    function drawWheel(ctx, cx, cy, r) {
+      ctx.fillStyle = '#1a1a1a';
+      ctx.beginPath();
+      ctx.arc(cx, cy, r, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = '#9aa0a8';
+      ctx.beginPath();
+      ctx.arc(cx, cy, r - 4, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = '#3a3a3a';
+      ctx.beginPath();
+      ctx.arc(cx, cy, 2, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.strokeStyle = 'rgba(40,40,40,0.7)';
+      ctx.lineWidth = 1.4;
+      const spin = frame * (0.35 + speed * 0.08);
+      for (let i = 0; i < 4; i++) {
+        const a = spin + i * Math.PI / 2;
+        ctx.beginPath();
+        ctx.moveTo(cx, cy);
+        ctx.lineTo(cx + Math.cos(a) * (r - 4.5), cy + Math.sin(a) * (r - 4.5));
+        ctx.stroke();
+      }
+      ctx.strokeStyle = '#1a1a1a';
+      ctx.lineWidth = 1.5;
+      ctx.beginPath();
+      ctx.arc(cx, cy, r, 0, Math.PI * 2);
+      ctx.stroke();
+    }
+
+    function drawObstacle(ctx, o) {
+      const x = o.x;
+      if (o.type === 'cone') {
+        ctx.fillStyle = '#1a1a1a';
+        ctx.fillRect(x - 11, ROAD_TOP - 3, 22, 4);
+        ctx.fillStyle = '#e67e22';
+        ctx.beginPath();
+        ctx.moveTo(x - 9, ROAD_TOP - 3);
+        ctx.lineTo(x, ROAD_TOP - 28);
+        ctx.lineTo(x + 9, ROAD_TOP - 3);
+        ctx.closePath();
+        ctx.fill();
+        ctx.fillStyle = '#fdf6e3';
+        ctx.beginPath();
+        ctx.moveTo(x - 6.5, ROAD_TOP - 13);
+        ctx.lineTo(x + 6.5, ROAD_TOP - 13);
+        ctx.lineTo(x + 5.3, ROAD_TOP - 9);
+        ctx.lineTo(x - 5.3, ROAD_TOP - 9);
+        ctx.closePath();
+        ctx.fill();
+        ctx.fillStyle = 'rgba(0,0,0,0.18)';
+        ctx.beginPath();
+        ctx.moveTo(x, ROAD_TOP - 28);
+        ctx.lineTo(x + 9, ROAD_TOP - 3);
+        ctx.lineTo(x + 3, ROAD_TOP - 3);
+        ctx.closePath();
+        ctx.fill();
+        ctx.strokeStyle = '#1a1a1a';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.moveTo(x - 9, ROAD_TOP - 3);
+        ctx.lineTo(x, ROAD_TOP - 28);
+        ctx.lineTo(x + 9, ROAD_TOP - 3);
+        ctx.stroke();
+      } else if (o.type === 'rock') {
+        ctx.fillStyle = '#7f8c8d';
+        ctx.beginPath();
+        ctx.moveTo(x - 17, ROAD_TOP);
+        ctx.lineTo(x - 14, ROAD_TOP - 14);
+        ctx.lineTo(x - 5, ROAD_TOP - 21);
+        ctx.lineTo(x + 7, ROAD_TOP - 19);
+        ctx.lineTo(x + 16, ROAD_TOP - 9);
+        ctx.lineTo(x + 17, ROAD_TOP);
+        ctx.closePath();
+        ctx.fill();
+        ctx.fillStyle = '#566567';
+        ctx.beginPath();
+        ctx.moveTo(x - 3, ROAD_TOP - 19);
+        ctx.lineTo(x + 16, ROAD_TOP - 9);
+        ctx.lineTo(x + 17, ROAD_TOP);
+        ctx.lineTo(x + 4, ROAD_TOP);
+        ctx.closePath();
+        ctx.fill();
+        ctx.strokeStyle = '#3d4849';
+        ctx.lineWidth = 1;
+        ctx.beginPath();
+        ctx.moveTo(x - 8, ROAD_TOP - 17);
+        ctx.lineTo(x - 4, ROAD_TOP - 8);
+        ctx.lineTo(x - 6, ROAD_TOP - 2);
+        ctx.stroke();
+        ctx.strokeStyle = '#1a1a1a';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.moveTo(x - 17, ROAD_TOP);
+        ctx.lineTo(x - 14, ROAD_TOP - 14);
+        ctx.lineTo(x - 5, ROAD_TOP - 21);
+        ctx.lineTo(x + 7, ROAD_TOP - 19);
+        ctx.lineTo(x + 16, ROAD_TOP - 9);
+        ctx.lineTo(x + 17, ROAD_TOP);
+        ctx.stroke();
+      } else if (o.type === 'barrel') {
+        const grad = ctx.createLinearGradient(x - 13, 0, x + 13, 0);
+        grad.addColorStop(0, '#7d3a1a');
+        grad.addColorStop(0.5, '#c0563b');
+        grad.addColorStop(1, '#7d3a1a');
+        ctx.fillStyle = grad;
+        ctx.fillRect(x - 13, ROAD_TOP - 32, 26, 32);
+        ctx.fillStyle = '#a04428';
+        ctx.beginPath();
+        ctx.ellipse(x, ROAD_TOP - 32, 13, 3.5, 0, 0, Math.PI * 2);
+        ctx.fill();
+        ctx.fillStyle = 'rgba(0,0,0,0.35)';
+        ctx.fillRect(x - 13, ROAD_TOP - 24, 26, 2);
+        ctx.fillRect(x - 13, ROAD_TOP - 10, 26, 2);
+        ctx.fillStyle = '#f4c842';
+        ctx.fillRect(x - 8, ROAD_TOP - 20, 16, 6);
+        ctx.fillStyle = '#1a1a1a';
+        ctx.font = 'bold 7px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillText('!', x, ROAD_TOP - 15);
+        ctx.strokeStyle = '#1a1a1a';
+        ctx.lineWidth = 1.5;
+        ctx.strokeRect(x - 13, ROAD_TOP - 32, 26, 32);
+        ctx.beginPath();
+        ctx.ellipse(x, ROAD_TOP - 32, 13, 3.5, 0, 0, Math.PI * 2);
+        ctx.stroke();
+      }
+    }
+
+    function drawBird(ctx, b) {
+      ctx.strokeStyle = '#1a1a1a';
+      ctx.lineWidth = 2 * b.size;
+      ctx.lineCap = 'round';
+      const flap = Math.sin(b.wing) * 5;
+      const w = 10 * b.size;
+      ctx.beginPath();
+      ctx.moveTo(b.x - w, b.y + flap * 0.4);
+      ctx.quadraticCurveTo(b.x - w * 0.45, b.y - 7 - flap, b.x, b.y);
+      ctx.quadraticCurveTo(b.x + w * 0.45, b.y - 7 - flap, b.x + w, b.y + flap * 0.4);
+      ctx.stroke();
+      ctx.fillStyle = '#1a1a1a';
+      ctx.beginPath();
+      ctx.ellipse(b.x, b.y + 1, 2.8 * b.size, 1.6 * b.size, 0, 0, Math.PI * 2);
+      ctx.fill();
+      ctx.fillStyle = '#e67e22';
+      ctx.beginPath();
+      ctx.moveTo(b.x - 2.5 * b.size, b.y + 0.5);
+      ctx.lineTo(b.x - 5 * b.size, b.y + 1.2);
+      ctx.lineTo(b.x - 2.5 * b.size, b.y + 1.8);
+      ctx.closePath();
+      ctx.fill();
+    }
+
+    function drawCrash(ctx, c) {
+      const t = Math.min(1, c.t / 700);
+      const r = 8 + t * 60;
+      ctx.strokeStyle = `rgba(255,200,40,${1 - t})`;
+      ctx.lineWidth = 5 * (1 - t) + 1;
+      ctx.beginPath();
+      ctx.arc(c.x, c.y, r, 0, Math.PI * 2);
+      ctx.stroke();
+      ctx.fillStyle = `rgba(231,76,60,${1 - t})`;
+      for (let i = 0; i < 8; i++) {
+        const a = i * Math.PI / 4 + t * 0.6;
+        const x2 = c.x + Math.cos(a) * (r + 6);
+        const y2 = c.y + Math.sin(a) * (r + 6);
+        ctx.beginPath();
+        ctx.moveTo(c.x + Math.cos(a + 0.2) * (r - 4), c.y + Math.sin(a + 0.2) * (r - 4));
+        ctx.lineTo(x2, y2);
+        ctx.lineTo(c.x + Math.cos(a - 0.2) * (r - 4), c.y + Math.sin(a - 0.2) * (r - 4));
+        ctx.closePath();
+        ctx.fill();
+      }
+      if (t < 0.7) {
+        ctx.font = 'bold 36px "Bebas Neue", sans-serif';
+        ctx.textAlign = 'center';
+        ctx.fillStyle = `rgba(192,57,43,${1 - t})`;
+        ctx.strokeStyle = `rgba(26,18,8,${1 - t})`;
+        ctx.lineWidth = 3;
+        ctx.strokeText('BOUM !', c.x, c.y - r - 4);
+        ctx.fillText('BOUM !', c.x, c.y - r - 4);
+      }
+    }
+
+    // ========== Answer check ==========
+    function checkBirds() {
+      const ans = parseInt(document.getElementById('bird-answer').value, 10);
+      const fb = document.getElementById('bird-feedback');
+      clearChildren(fb);
+      if (Number.isNaN(ans)) {
+        fb.appendChild(makeEl('p', { className: 'feedback-err', text: 'Tape un nombre.' }));
+        return;
+      }
+      if (ans === birdCount) {
+        jules.react('correct');
+        setTimeout(() => juliette.react('correct'), 600);
+        showVictory(`Exact ! ${birdCount} oiseaux. Arrivé au bureau en un morceau. Et qu'est-ce qui traîne sur son bureau ? 🕵️`, () => goToNext(2));
+      } else {
+        jules.react('wrong');
+        const diff = ans - birdCount;
+        const txt = (diff < 0
+          ? "T'en as raté. Recompte la prochaine fois."
+          : "T'as compté des oiseaux imaginaires.")
+          + " Recommence et compte mieux.";
+        fb.appendChild(makeEl('p', { className: 'feedback-err', text: txt }));
+      }
+    }
+  </script>
+</body>
+
+</html>

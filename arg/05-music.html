@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>ÉTAPE 4 - LA CHANSON</title>
+  <link rel="stylesheet" href="shared.css" />
+  <style>
+    .player-wrap {
+      border: 3px solid var(--ink);
+      padding: 24px;
+      background: var(--ink);
+      margin: 24px 0;
+    }
+
+    .player-wrap audio {
+      width: 100%;
+      filter: invert(0.9) hue-rotate(180deg);
+    }
+
+    .player-label {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 12px;
+      letter-spacing: 0.2em;
+      color: rgba(242, 234, 216, 0.55);
+      margin-bottom: 14px;
+    }
+
+    .player-meta {
+      font-family: 'Special Elite', serif;
+      font-size: 12px;
+      color: rgba(242, 234, 216, 0.45);
+      margin-top: 12px;
+      font-style: italic;
+    }
+
+    .riddle {
+      border: 3px solid var(--ink);
+      background: var(--paper-dark);
+      padding: 22px 26px;
+      margin: 24px 0;
+      font-family: 'Special Elite', serif;
+      font-size: 17px;
+      line-height: 1.9;
+      color: var(--ink);
+      position: relative;
+    }
+
+    .riddle::before {
+      content: '✎ TRANSCRIPTION DES VERS';
+      position: absolute;
+      top: -11px;
+      left: 18px;
+      background: var(--paper);
+      padding: 0 10px;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 12px;
+      letter-spacing: 0.18em;
+      color: var(--red);
+    }
+
+    .riddle p {
+      margin: 0;
+      text-align: center;
+    }
+
+    .riddle .question {
+      margin-top: 14px;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 26px;
+      letter-spacing: 0.04em;
+      color: var(--red);
+    }
+
+    .reveal-btn {
+      background: transparent;
+      border: 1.5px dashed var(--ink-light);
+      color: var(--ink-light);
+      padding: 8px 16px;
+      font-family: 'Special Elite', serif;
+      font-size: 13px;
+      cursor: pointer;
+      margin-top: 8px;
+    }
+
+    .reveal-btn:hover {
+      background: var(--paper-dark);
+    }
+
+    .headline-box {
+      border: 3px solid var(--ink);
+      padding: 12px 18px;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .step-badge {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 48px;
+      line-height: 1;
+      color: var(--red);
+      flex-shrink: 0;
+    }
+
+    /* ── Disco ambiance (active only while audio plays) ───────────────── */
+    .disco-stage {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 9998;
+      opacity: 0;
+      transition: opacity 0.6s ease;
+      overflow: hidden;
+    }
+
+    body.disco .disco-stage {
+      opacity: 1;
+    }
+
+    /* Dark overlay to darken the page so the beams pop */
+    .disco-darken {
+      position: absolute;
+      inset: 0;
+      background: rgba(8, 6, 4, 0.55);
+    }
+
+    /* Light beams: long warm white cones originating from the top edge.
+       The cone shape comes from a soft radial mask, so the bounding
+       rectangle of the element never shows. */
+    .disco-beam {
+      position: absolute;
+      top: 0;
+      width: 32vmax;
+      height: 160vmax;
+      background: linear-gradient(to bottom,
+          rgba(255, 250, 235, 0.55) 0%,
+          rgba(255, 250, 235, 0.30) 30%,
+          rgba(255, 250, 235, 0.08) 70%,
+          rgba(255, 250, 235, 0) 100%);
+      -webkit-mask-image: radial-gradient(ellipse 55% 95% at 50% 0%,
+          rgba(0, 0, 0, 1) 0%,
+          rgba(0, 0, 0, 0.85) 25%,
+          rgba(0, 0, 0, 0.4) 65%,
+          rgba(0, 0, 0, 0) 100%);
+      mask-image: radial-gradient(ellipse 55% 95% at 50% 0%,
+          rgba(0, 0, 0, 1) 0%,
+          rgba(0, 0, 0, 0.85) 25%,
+          rgba(0, 0, 0, 0.4) 65%,
+          rgba(0, 0, 0, 0) 100%);
+      filter: blur(2px);
+      mix-blend-mode: screen;
+      transform-origin: 50% 0%;
+    }
+
+    .disco-beam.b1 {
+      left: 6%;
+      animation: beam-sweep-1 5.2s ease-in-out infinite alternate;
+    }
+
+    .disco-beam.b2 {
+      left: 24%;
+      animation: beam-sweep-2 6.7s ease-in-out infinite alternate;
+    }
+
+    .disco-beam.b3 {
+      left: 42%;
+      animation: beam-sweep-3 4.8s ease-in-out infinite alternate;
+    }
+
+    .disco-beam.b4 {
+      left: 58%;
+      animation: beam-sweep-4 6.1s ease-in-out infinite alternate;
+    }
+
+    .disco-beam.b5 {
+      left: 76%;
+      animation: beam-sweep-5 5.7s ease-in-out infinite alternate;
+    }
+
+    .disco-beam.b6 {
+      left: 90%;
+      animation: beam-sweep-6 7.3s ease-in-out infinite alternate;
+    }
+
+    @keyframes beam-sweep-1 {
+      0% {
+        transform: translateX(-50%) rotate(-35deg);
+        opacity: 0.55;
+      }
+
+      50% {
+        transform: translateX(-50%) rotate(-10deg);
+        opacity: 1;
+      }
+
+      100% {
+        transform: translateX(-50%) rotate(20deg);
+        opacity: 0.55;
+      }
+    }
+
+    @keyframes beam-sweep-2 {
+      0% {
+        transform: translateX(-50%) rotate(25deg);
+        opacity: 0.6;
+      }
+
+      50% {
+        transform: translateX(-50%) rotate(-5deg);
+        opacity: 1;
+      }
+
+      100% {
+        transform: translateX(-50%) rotate(-30deg);
+        opacity: 0.6;
+      }
+    }
+
+    @keyframes beam-sweep-3 {
+      0% {
+        transform: translateX(-50%) rotate(-22deg);
+        opacity: 0.55;
+      }
+
+      50% {
+        transform: translateX(-50%) rotate(15deg);
+        opacity: 1;
+      }
+
+      100% {
+        transform: translateX(-50%) rotate(-8deg);
+        opacity: 0.55;
+      }
+    }
+
+    @keyframes beam-sweep-4 {
+      0% {
+        transform: translateX(-50%) rotate(18deg);
+        opacity: 0.55;
+      }
+
+      50% {
+        transform: translateX(-50%) rotate(-12deg);
+        opacity: 1;
+      }
+
+      100% {
+        transform: translateX(-50%) rotate(28deg);
+        opacity: 0.55;
+      }
+    }
+
+    @keyframes beam-sweep-5 {
+      0% {
+        transform: translateX(-50%) rotate(-28deg);
+        opacity: 0.6;
+      }
+
+      50% {
+        transform: translateX(-50%) rotate(8deg);
+        opacity: 1;
+      }
+
+      100% {
+        transform: translateX(-50%) rotate(32deg);
+        opacity: 0.6;
+      }
+    }
+
+    @keyframes beam-sweep-6 {
+      0% {
+        transform: translateX(-50%) rotate(35deg);
+        opacity: 0.55;
+      }
+
+      50% {
+        transform: translateX(-50%) rotate(10deg);
+        opacity: 1;
+      }
+
+      100% {
+        transform: translateX(-50%) rotate(-18deg);
+        opacity: 0.55;
+      }
+    }
+
+    /* Periodic strobe flash */
+    .disco-strobe {
+      position: absolute;
+      inset: 0;
+      background: white;
+      mix-blend-mode: overlay;
+      opacity: 0;
+      animation: disco-strobe 2.7s steps(1, end) infinite;
+    }
+
+    @keyframes disco-strobe {
+
+      0%,
+      95% {
+        opacity: 0;
+      }
+
+      96%,
+      97% {
+        opacity: 0.55;
+      }
+
+      98%,
+      99% {
+        opacity: 0;
+      }
+
+      99.5% {
+        opacity: 0.4;
+      }
+
+      100% {
+        opacity: 0;
+      }
+    }
+
+    /* Strong vignette to deepen the edges */
+    .disco-vignette {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse at 50% 30%, transparent 20%, rgba(0, 0, 0, 0.7) 100%);
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+
+      .disco-beam,
+      .disco-strobe {
+        animation: none !important;
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="newslines"></div>
+  <div class="page">
+
+    <div class="paper-header">
+      <span class="paper-name">LE BASTIEN QUOTIDIEN</span>
+      <span class="paper-date">ÉTAPE 4 / 7 - 12H30</span>
+      <span class="stamp">ÉCOUTE</span>
+    </div>
+
+    <div class="headline-box">
+      <span class="step-badge">04</span>
+      <div>
+        <div class="tabloid-title" style="font-size:clamp(26px,4.5vw,52px);">LA CHANSON DU DÉJEUNER</div>
+        <div class="byline">Playlist de midi - toujours la même depuis 2017</div>
+      </div>
+    </div>
+
+    <p class="body-text">
+      12h30. Pause déjeuner. Bastien sort du bureau, dégaine son casque, lance LA playlist.
+      Un opéra rock qui mélange Mozart et métal - oui, ça existe. Il connaît chaque note
+      par cœur. C'est mignon. Et un peu inquiétant.
+    </p>
+
+    <p class="body-text">
+      Lance la lecture. <strong>Écoute jusqu'au bout.</strong>
+    </p>
+
+    <div class="player-wrap">
+      <div class="player-label">EXTRAIT AUDIO - PLAYLIST DE DÉJEUNER</div>
+      <audio id="music-player" controls preload="metadata">
+        <source src="../uploads/music_3.mp3" type="audio/mpeg" />
+        Ton navigateur ne supporte pas l'audio HTML5.
+      </audio>
+      <div class="player-meta">
+        Mets le son. Vraiment.
+      </div>
+    </div>
+
+    <div style="margin-top:24px">
+      <label class="field-label">Réponse à l'énigme chantée</label>
+      <input type="text" id="music-answer" placeholder="Qui est-elle ?" autocomplete="off" />
+    </div>
+    <div style="margin-top:12px"><button class="btn-big" onclick="validate()">VALIDER</button></div>
+    <div id="feedback"></div>
+
+    <div style="margin-top:18px;display:flex;gap:10px;flex-wrap:wrap">
+      <button class="reveal-btn" id="reveal-btn" onclick="revealLyrics()">📝 Pas réussi à tout entendre ? Lire les
+        vers</button>
+      <button class="btn-hint" id="hint-btn" onclick="showHint()">Indice</button>
+    </div>
+
+    <div id="riddle-box" class="riddle" style="display:none">
+      <p>Son étoile ne brille pas,</p>
+      <p>Son cheval ne galope pas,</p>
+      <p>Son araignée ne pique pas,</p>
+      <p>Son éléphant ne barrit pas.</p>
+      <p class="question">Qui est-elle ?</p>
+    </div>
+
+    <div id="hint-box" style="display:none;margin-top:14px" class="callout">
+      💡 Quatre animaux dans la chanson. Chacun peut être suivi du même complément.
+    </div>
+
+    <hr class="rule" style="margin-top:32px" />
+    <div style="display:flex;justify-content:space-between">
+      <a href="04-cipher.html" style="font-family:'Special Elite',serif;font-size:13px;color:var(--ink-light);">←
+        Retour</a>
+      <span style="font-family:'Special Elite',serif;font-size:12px;color:var(--ink-light);opacity:0.5">Étape 4/7</span>
+    </div>
+  </div>
+
+  <div id="victory-overlay">
+    <div class="victory-title" id="victory-title">✓ RÉSOLU !</div>
+    <div class="victory-subtitle" id="victory-sub"></div>
+  </div>
+  <div class="disco-stage" id="disco-stage" aria-hidden="true">
+    <div class="disco-darken"></div>
+    <div class="disco-beam b1"></div>
+    <div class="disco-beam b2"></div>
+    <div class="disco-beam b3"></div>
+    <div class="disco-beam b4"></div>
+    <div class="disco-beam b5"></div>
+    <div class="disco-beam b6"></div>
+    <div class="disco-strobe"></div>
+    <div class="disco-vignette"></div>
+  </div>
+
+  <div id="juliette-avatar"></div>
+  <div id="jules-avatar"></div>
+
+  <script src="shared.js"></script>
+  <script>
+    checkAccess(4);
+
+    const jules = new PhotoAvatar('jules-avatar', '../uploads/avatar_file-1777938267546.JPG', 'Jules', [
+      "Pause déj' méritée. Il a survécu à la moto et déchiffré son grimoire. Il s'octroie l'opéra rock.",
+      "Cette playlist, il l'a depuis ses 17 ans. Huit ans qu'il l'écoute. Huit. Ans.",
+      "Mets le son. Tu vas reconnaître l'instru direct.",
+      "Y'a une question dans la chanson. Trouve la réponse.",
+    ], {
+      correct: ["LA MER ! Étoile, cheval, araignée, éléphant - tous de mer. 🌊"],
+      wrong: ["Non. Réécoute les quatre animaux. Le mot qui les relie."],
+      hint: ["Ok : étoile de ___, cheval de ___, araignée de ___, éléphant de ___. Même mot."],
+    });
+    const juliette = new PhotoAvatar('juliette-avatar', '../uploads/juliette.png', 'Juliette', [
+      "Il déjeune en hurlant du Mozart-métal. Voilà. C'est ça, Bastien à midi.",
+      "L'instrumental tu vas le reconnaître. Les paroles... bonne écoute.",
+      "Concentre-toi sur les quatre animaux qu'il cite.",
+      "C'est une charade. Le complément commun à tous les animaux.",
+    ], {
+      correct: ["La mer ! Bonne pêche. 🐟"],
+      wrong: ["Pas tout à fait. Pense à ce qui suit chaque animal."],
+    });
+
+    function showHint() {
+      document.getElementById('hint-box').style.display = 'block';
+      document.getElementById('hint-btn').style.display = 'none';
+      jules.react('hint');
+    }
+
+    function revealLyrics() {
+      document.getElementById('riddle-box').style.display = 'block';
+      document.getElementById('reveal-btn').style.display = 'none';
+    }
+
+    function normalize(s) {
+      return s.trim().toLowerCase()
+        .normalize('NFD').replace(/[̀-ͯ]/g, '')
+        .replace(/[^a-z0-9 ]/g, '');
+    }
+
+    function validate() {
+      const a = normalize(document.getElementById('music-answer').value);
+      const ok = ['mer', 'la mer', 'lamer', 'cest la mer', 'elle est la mer', 'la mer mediterranee'].some(x => a === x) || a.endsWith(' mer') || a === 'mer';
+      const fb = document.getElementById('feedback');
+      if (ok) {
+        jules.react('correct');
+        setTimeout(() => juliette.react('correct'), 600);
+        showVictory("LA MER ! Pause finie, retour au bureau. Sur le coin de la table : la photo de ses potes. Quelque chose cloche dans les pixels. 🖼️", () => goToNext(4));
+      } else {
+        jules.react('wrong');
+        fb.textContent = '';
+        const p = document.createElement('p');
+        p.className = 'feedback-err';
+        p.textContent = "Non. Réécoute la chanson : les quatre animaux partagent le même complément.";
+        fb.appendChild(p);
+      }
+    }
+    document.getElementById('music-answer').addEventListener('keydown', e => { if (e.key === 'Enter') validate(); });
+
+    // ── Disco mode: lights on while audio plays ─────────────────────────
+    const player = document.getElementById('music-player');
+    const enableDisco = () => document.body.classList.add('disco');
+    const disableDisco = () => document.body.classList.remove('disco');
+    player.addEventListener('play', enableDisco);
+    player.addEventListener('pause', disableDisco);
+    player.addEventListener('ended', disableDisco);
+  </script>
+</body>
+
+</html>

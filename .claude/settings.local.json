@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:api.anthropic.com)",
+      "Bash(python3 /tmp/build_shared.py)",
+      "Bash(cp /tmp/design_extract/bastien/project/arg/shared.js /tmp/shared_orig.js)",
+      "Read(//tmp/**)",
+      "Bash(sed -i 's|<div id=\"jules-avatar\" class=\"avatar-unit\"></div>\\\\n    <div id=\"juliette-avatar\" class=\"avatar-unit\"></div>|<div id=\"juliette-avatar\" class=\"avatar-unit\"></div>\\\\n    <div id=\"jules-avatar\" class=\"avatar-unit\"></div>|g' \"C:/Users/jules/Documents/programmation/SideProjects-Start/AnnivBastien/arg/\"*.html)",
+      "Bash(perl -i -0pe 's|\\(<div id=\"\\)\\(jules\\)\\(-avatar\" class=\"avatar-unit\"></div>\\\\s*\\\\n\\\\s*<div id=\"\\)\\(juliette\\)\\(-avatar\"\\)|\\\\1\\\\4\\\\3\\\\2\\\\5|g' \"C:/Users/jules/Documents/programmation/SideProjects-Start/AnnivBastien/arg/\"*.html)",
+      "Bash(perl -i -0pe 's|  <div id=\"avatars-container\">\\\\n    <div id=\"juliette-avatar\" class=\"avatar-unit\"></div>\\\\n    <div id=\"jules-avatar\" class=\"avatar-unit\"></div>\\\\n  </div>|  <div id=\"juliette-avatar\"></div>\\\\n  <div id=\"jules-avatar\"></div>|g' \"C:/Users/jules/Documents/programmation/SideProjects-Start/AnnivBastien/arg/\"*.html)"
+    ]
+  }
+}

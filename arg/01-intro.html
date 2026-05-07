@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>LE JOURNAL DE BASTIEN</title>
+  <link rel="stylesheet" href="shared.css" />
+  <style>
+    .hero-banner {
+      text-align: center;
+      padding: 40px 0 0;
+      position: relative;
+    }
+
+    .big-number {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(100px, 22vw, 260px);
+      line-height: 0.85;
+      color: var(--ink);
+      display: block;
+      letter-spacing: -0.02em;
+    }
+
+    .ans-label {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(28px, 6vw, 72px);
+      letter-spacing: 0.12em;
+      color: var(--red);
+      display: block;
+      margin-top: -8px;
+    }
+
+    .sub-label {
+      font-family: 'Special Elite', serif;
+      font-size: clamp(13px, 2.5vw, 18px);
+      color: var(--ink-light);
+      display: block;
+      margin-top: 4px;
+      letter-spacing: 0.06em;
+    }
+
+    .columns {
+      display: grid;
+      grid-template-columns: 1fr 1px 1fr;
+      gap: 24px;
+      margin-top: 28px;
+    }
+
+    .col-divider {
+      background: var(--ink);
+      opacity: 0.25;
+    }
+
+    .teaser-item {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      padding: 16px 0;
+      border-bottom: 1px solid rgba(0, 0, 0, 0.15);
+    }
+
+    .teaser-num {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 12px;
+      letter-spacing: 0.2em;
+      color: var(--red);
+    }
+
+    .teaser-title {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 22px;
+      line-height: 1;
+      color: var(--ink);
+    }
+
+    .teaser-body {
+      font-family: 'Special Elite', serif;
+      font-size: 13px;
+      color: var(--ink-light);
+      line-height: 1.55;
+    }
+
+    .black-banner {
+      background: var(--ink);
+      color: var(--paper);
+      padding: 14px 24px;
+      margin: 28px -32px;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(18px, 4vw, 36px);
+      letter-spacing: 0.08em;
+      text-align: center;
+    }
+
+    .photo-box {
+      width: 140px;
+      height: 220px;
+      border: 3px solid var(--ink);
+      overflow: hidden;
+      float: right;
+      margin: 0 0 16px 20px;
+      position: relative;
+    }
+
+    .photo-box img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center top;
+      filter: grayscale(0.4) contrast(1.1);
+    }
+
+    .photo-caption {
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      right: 0;
+      background: var(--ink);
+      color: var(--paper);
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 10px;
+      letter-spacing: 0.12em;
+      padding: 3px 6px;
+      text-align: center;
+    }
+
+    .begin-center {
+      text-align: center;
+      margin-top: 40px;
+      padding: 32px;
+      border-top: 3px double var(--ink);
+    }
+  </style>
+</head>
+
+<body>
+  <div class="newslines"></div>
+
+  <div class="page">
+    <div class="paper-header">
+      <span class="paper-name">LE BASTIEN QUOTIDIEN</span>
+      <span class="paper-date">JEUDI 22 JANVIER 2026 - ÉDITION SPÉCIALE 25 ANS</span>
+      <span class="stamp">CONFIDENTIEL</span>
+    </div>
+
+    <div class="hero-banner">
+      <span class="big-number">25</span>
+      <span class="ans-label">ANS DEJA</span>
+      <span class="sub-label">- un bilan exhaustif et sans complaisance -</span>
+    </div>
+
+    <hr class="rule-double" />
+
+    <div class="photo-box">
+      <img src="../uploads/Snapchat-482423467.jpg" alt="Bastien" />
+      <span class="photo-caption">LE SUSPECT</span>
+    </div>
+
+    <p class="body-text">
+      <strong>Colmar, 22 janvier 2026.</strong> L'aube se lève
+      sur l'Alsace avec la gravité d'un événement historique. Car en ce matin-là,
+      un homme franchit le seuil du quart de siècle. La mine décontractée,
+      le permis de conduire à court de points, et l'avenir devant lui.
+      Une belle âme a gagné une année.
+
+    <p>La rédaction, elle, avait préparé une enquête. Tu sais ce qu'il te reste à faire.</p>
+
+    <hr class="rule" />
+
+    <div class="black-banner">
+      « IL A QUASIMENT PLUS DE POINTS SUR SON PERMIS »
+    </div>
+
+    <div class="begin-center">
+      <p style="font-family:'Special Elite',serif;font-size:16px;color:var(--ink-light);margin-bottom:20px;">
+        Es-tu prêt à humilier un homme en son jour d'anniversaire ?
+      </p>
+      <a class="btn-big" href="02-gps.html" onclick="localStorage.setItem('bastien_unlocked','1')">
+        COMMENCER L'ENQUÊTE →
+      </a>
+      <p style="font-family:'Special Elite',serif;font-size:12px;color:var(--ink-light);margin-top:14px;opacity:0.6;">
+        * Aucun Bastien n'a été blessé lors de la création de ce jeu. Moralement si.
+      </p>
+    </div>
+  </div>
+
+  <!-- Victory overlay (not used on intro but needed for structure) -->
+  <div id="victory-overlay">
+    <div class="victory-title" id="victory-title">✓ RÉSOLU !</div>
+    <div class="victory-subtitle" id="victory-sub"></div>
+  </div>
+
+  <div id="juliette-avatar"></div>
+  <div id="jules-avatar"></div>
+
+  <script src="shared.js"></script>
+  <script>
+    const jules = new PhotoAvatar('jules-avatar', '../uploads/avatar_file-1777938267546.JPG', 'Jules', [
+      "Salut. Moi c'est Jules. Je connais Bastien par cœur. Trop, en fait.",
+      "On va te faire revivre sa journée. Étape par étape. Tu vas voir.",
+      "Mon passage préféré ? Le drone qui vole pas. Trois ans de tuning, zéro vol.",
+      "Juliette m'accompagne pour adoucir mes propos. Bon courage, à elle.",
+    ]);
+    const juliette = new PhotoAvatar('juliette-avatar', '../uploads/juliette.png', 'Juliette', [
+      "Coucou ! Moi c'est Juliette. Je suis là pour qu'on soit pas trop méchants.",
+      "On va t'accompagner toute la journée. De 7h30 jusqu'à tard le soir.",
+      "Tout ce qui est écrit ici est 100% vrai. Ou presque. 😬",
+      "Prêt·e ? Sept étapes, sept moments. C'est parti.",
+    ]);
+    setTimeout(() => jules.cycle(), 45000);
+    setTimeout(() => juliette.cycle(), 75000);
+  </script>
+</body>
+
+</html>

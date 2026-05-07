@@ -1,0 +1,277 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>FIN - LE CADEAU</title>
+  <link rel="stylesheet" href="shared.css" />
+  <style>
+    .final-headline {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(52px, 11vw, 130px);
+      line-height: 0.88;
+      color: var(--ink);
+      text-transform: uppercase;
+      text-align: center;
+      margin: 32px 0 8px;
+    }
+
+    .final-sub {
+      font-family: 'Special Elite', serif;
+      font-size: clamp(14px, 2.5vw, 20px);
+      color: var(--ink-light);
+      text-align: center;
+      margin-bottom: 32px;
+      line-height: 1.6;
+    }
+
+    .card-box {
+      border: 4px double var(--ink);
+      padding: 32px 36px 28px;
+      margin: 32px 0;
+      text-align: center;
+      position: relative;
+      background: var(--paper-dark);
+    }
+
+    .card-box::before {
+      content: '✉ CARTE OUVERTE ✉';
+      position: absolute;
+      top: -14px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--paper-dark);
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 13px;
+      letter-spacing: 0.2em;
+      color: var(--red);
+      padding: 0 12px;
+    }
+
+    .card-text {
+      font-family: 'Special Elite', serif;
+      font-size: clamp(15px, 2.5vw, 19px);
+      line-height: 1.75;
+      color: var(--ink);
+    }
+
+    .card-signature {
+      font-family: 'Bebas Neue', sans-serif;
+      letter-spacing: 0.18em;
+      font-size: 14px;
+      color: var(--red);
+      margin-top: 18px;
+      display: block;
+    }
+
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 1px;
+      background: var(--ink);
+      border: 2px solid var(--ink);
+      margin: 32px 0;
+    }
+
+    .stat-cell {
+      background: var(--paper);
+      padding: 16px 12px;
+      text-align: center;
+    }
+
+    .stat-num {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(28px, 5vw, 52px);
+      color: var(--red);
+      line-height: 1;
+    }
+
+    .stat-label {
+      font-family: 'Special Elite', serif;
+      font-size: 12px;
+      color: var(--ink-light);
+      margin-top: 4px;
+      line-height: 1.3;
+    }
+
+    .black-banner {
+      background: var(--ink);
+      color: var(--paper);
+      padding: 14px 24px;
+      margin: 0 -32px;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(18px, 4vw, 36px);
+      letter-spacing: 0.06em;
+      text-align: center;
+    }
+
+    .confetti {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 999;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="newslines"></div>
+  <canvas class="confetti" id="confetti"></canvas>
+
+  <div class="page">
+
+    <div class="paper-header">
+      <span class="paper-name">LE BASTIEN QUOTIDIEN</span>
+      <span class="paper-date">FIN - ÉDITION ANNIVERSAIRE</span>
+      <span class="stamp" style="border-color:#2d7a2d;color:#2d7a2d">RÉSOLU</span>
+    </div>
+
+    <div class="final-headline">FÉLICITATIONS<br />GÉNIE !</div>
+    <p class="final-sub">
+      Tu as survécu à une journée dans la vie de Bastien.<br />
+      C'est plus que ce qu'on espérait.
+    </p>
+
+    <hr class="rule-double" />
+
+    <div class="black-banner">
+      BILAN DE 25 ANS D'EXISTENCE - CHIFFRES CLÉS
+    </div>
+
+    <div class="stats-grid">
+      <div class="stat-cell">
+        <div class="stat-num">3</div>
+        <div class="stat-label">Années de construction drone<br />pour 0 vol réussi</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-num">~2</div>
+        <div class="stat-label">Points restants<br />sur le permis</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-num">1</div>
+        <div class="stat-label">Quasi-coma éthylique<br />- le seau, fidèle au poste</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-num">∞</div>
+        <div class="stat-label">Boîtes de Lego<br />craquées</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-num">8</div>
+        <div class="stat-label">Ans d'écoute en boucle<br />de L'Assasymphonie</div>
+      </div>
+      <div class="stat-cell">
+        <div class="stat-num">25</div>
+        <div class="stat-label">Années de médiocrité<br />attachante</div>
+      </div>
+    </div>
+
+    <div class="card-box">
+      <p class="card-text">
+        Bastien,<br /><br />
+        On a passé la journée à raconter tes travers, tes habitudes, ton drone qui vole pas
+        et ton seau préféré. C'était facile : t'as 25 ans de matière à fournir.<br /><br />
+        Mais derrière tout ça, on t'a regardé promener ton chien, prendre ta moto comme un fou,
+        connaître ta playlist par cœur, et garder cette photo de nous sur ton bureau.<br /><br />
+        On voulait juste te dire qu'on est fiers. Et qu'on t'aime, même quand t'es insupportable
+        avec tes PID.
+      </p>
+      <span class="card-signature">- Jules &amp; Juliette ✨</span>
+    </div>
+
+    <p
+      style="font-family:'Special Elite',serif;font-size:14px;color:var(--ink-light);text-align:center;margin-top:8px;line-height:1.7;">
+      Joyeux anniversaire, Bastien. 🎂
+    </p>
+
+    <hr class="rule" style="margin-top:40px" />
+    <div style="text-align:center;margin-top:20px">
+      <button class="btn-big" onclick="restartConfetti()">🎉 ENCORE DES CONFETTIS</button>
+      &nbsp;
+      <a class="btn-big" href="01-intro.html" style="display:inline-block;margin-top:8px">↺ RECOMMENCER</a>
+    </div>
+
+  </div>
+
+  <!-- No victory overlay needed - this IS the final screen -->
+  <div id="juliette-avatar"></div>
+  <div id="jules-avatar"></div>
+
+  <script src="shared.js"></script>
+  <script>
+    checkAccess(7);
+
+    const jules = new PhotoAvatar('jules-avatar', '../uploads/avatar_file-1777938267546.JPG', 'Jules', [
+      "Voilà. Une journée entière de Bastien. T'as tenu. Moi je vis avec ça au quotidien.",
+      "Chien, moto, code, mer, photo, drone. Voilà ses 25 ans en six mots.",
+      "On a écrit ça à deux avec Juliette. C'est ridicule, mais c'est de bon cœur.",
+      "Joyeux anniversaire Bastien. T'es vieux. On t'aime quand même. 🎂",
+    ]);
+    const juliette = new PhotoAvatar('juliette-avatar', '../uploads/juliette.png', 'Juliette', [
+      "Tu as suivi sa journée du matin au soir. Bravo. 🎉",
+      "Le passage du seau, on est presque désolés. Presque.",
+      "Le passage de la photo, par contre, c'est notre vrai cadeau.",
+      "Joyeux anniversaire Bastien ! On t'aime fort. 🎂",
+    ]);
+
+    setTimeout(() => jules.showQuip(0), 800);
+    setTimeout(() => juliette.showQuip(0), 2000);
+    setTimeout(() => jules.cycle(), 6000);
+    setTimeout(() => juliette.cycle(), 8000);
+
+    // Confetti
+    const canvas = document.getElementById('confetti');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+    let animating = false;
+
+    function resize() { canvas.width = window.innerWidth; canvas.height = window.innerHeight; }
+    resize(); window.addEventListener('resize', resize);
+
+    function spawnConfetti() {
+      particles = [];
+      const colors = ['#c0392b', '#f4c842', '#1a1208', '#f2ead8', '#e8a030', '#2d7a2d'];
+      for (let i = 0; i < 140; i++) {
+        particles.push({
+          x: Math.random() * canvas.width,
+          y: -20 - Math.random() * 200,
+          w: 8 + Math.random() * 10,
+          h: 4 + Math.random() * 6,
+          rot: Math.random() * Math.PI * 2,
+          rotV: (Math.random() - 0.5) * 0.15,
+          vx: (Math.random() - 0.5) * 3,
+          vy: 3 + Math.random() * 4,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          alpha: 1,
+        });
+      }
+    }
+
+    function drawConfetti() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particles.forEach(p => {
+        p.x += p.vx; p.y += p.vy; p.rot += p.rotV;
+        if (p.y > canvas.height - 80) p.alpha = Math.max(0, p.alpha - 0.03);
+        ctx.save();
+        ctx.translate(p.x, p.y);
+        ctx.rotate(p.rot);
+        ctx.globalAlpha = p.alpha;
+        ctx.fillStyle = p.color;
+        ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+        ctx.restore();
+      });
+      particles = particles.filter(p => p.alpha > 0);
+      if (particles.length > 0) requestAnimationFrame(drawConfetti);
+    }
+
+    function restartConfetti() {
+      spawnConfetti();
+      drawConfetti();
+    }
+
+    // Auto-start confetti
+    setTimeout(() => { spawnConfetti(); drawConfetti(); }, 400);
+  </script>
+</body>
+
+</html>

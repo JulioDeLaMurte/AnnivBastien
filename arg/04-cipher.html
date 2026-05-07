@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>ÉTAPE 3 - L'ARCHITECTE</title>
+  <link rel="stylesheet" href="shared.css" />
+  <style>
+    .cipher-box {
+      background: var(--ink);
+      color: var(--paper);
+      padding: 28px 24px;
+      margin: 12px 0 0;
+      border: 3px solid var(--ink);
+    }
+
+    .cipher-text {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(32px, 6vw, 64px);
+      letter-spacing: 0.22em;
+      line-height: 1.2;
+      text-align: center;
+    }
+
+    .morse-player {
+      border: 2px solid var(--ink);
+      padding: 16px 20px;
+      margin: 12px 0 0;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .play-btn {
+      width: 52px;
+      height: 52px;
+      border-radius: 0;
+      background: var(--red);
+      border: 3px solid var(--ink);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+      transition: transform 0.1s;
+    }
+
+    .play-btn:hover {
+      transform: scale(1.05);
+    }
+
+    .headline-box {
+      border: 3px solid var(--ink);
+      padding: 12px 18px;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .step-badge {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 48px;
+      line-height: 1;
+      color: var(--red);
+      flex-shrink: 0;
+    }
+
+    .morse-dots {
+      font-family: monospace;
+      font-size: 13px;
+      color: var(--ink-light);
+      letter-spacing: 0.1em;
+      line-height: 1.6;
+      word-break: break-all;
+    }
+
+    .stage {
+      margin-top: 28px;
+    }
+
+    .stage-marker {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 15px;
+      letter-spacing: 0.2em;
+      color: var(--ink);
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 4px;
+    }
+
+    .stage-marker .stage-letter {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      width: 26px;
+      height: 26px;
+      background: var(--ink);
+      color: var(--paper);
+      font-size: 16px;
+    }
+
+    .stage-instruction {
+      font-family: 'Special Elite', serif;
+      font-size: 13.5px;
+      color: var(--ink-light);
+      margin-bottom: 8px;
+    }
+
+    .ref-toggle {
+      font-family: 'Special Elite', serif;
+      font-size: 12px;
+      color: var(--ink-light);
+      background: none;
+      border: none;
+      cursor: pointer;
+      text-decoration: underline;
+      padding: 8px 0 0;
+    }
+
+    .morse-ref {
+      background: var(--paper-dark);
+      border: 1px solid var(--ink);
+      padding: 14px 16px;
+      margin-top: 8px;
+      font-family: monospace;
+      font-size: 12px;
+      line-height: 1.8;
+      column-count: 4;
+      column-gap: 16px;
+    }
+
+    .morse-ref span {
+      display: block;
+    }
+
+    .morse-ref b {
+      color: var(--red);
+      margin-right: 6px;
+    }
+
+    .arrow-down {
+      text-align: center;
+      font-size: 22px;
+      color: var(--ink-light);
+      margin: 14px 0 0;
+      letter-spacing: 4px;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="newslines"></div>
+  <div class="page">
+
+    <div class="paper-header">
+      <span class="paper-name">LE BASTIEN QUOTIDIEN</span>
+      <span class="paper-date">ÉTAPE 3 / 7 - 09H00</span>
+      <span class="stamp">CLASSIFIÉ</span>
+    </div>
+
+    <div class="headline-box">
+      <span class="step-badge">03</span>
+      <div>
+        <div class="tabloid-title" style="font-size:clamp(26px,4.5vw,52px);">L'ARCHITECTE PRÉFÉRÉ</div>
+        <div class="byline">Un message chiffré + un dictaphone</div>
+      </div>
+    </div>
+
+    <p class="body-text">
+      9h pile, Bastien gare la moto et pousse la porte du bureau. Il pose son casque,
+      lève les yeux : sur sa table, un message chiffré griffonné, et à côté un vieux
+      dictaphone.
+
+      <br>
+      <br>
+
+      Le message en clair, c'est <strong>le nom d'un architecte
+        mondialement connu</strong>. Mais sans la <em>clé</em> du chiffre, autant chercher une aiguille
+      dans une botte de foin.
+    </p>
+
+    <p class="body-text" style="margin-top:8px">
+      Le dictaphone, justement, c'est ça : il vous donne <strong>la méthode pour déchiffrer</strong>,
+      pas la réponse.
+    </p>
+
+    <!-- ─── ÉTAPE A : décoder le Morse pour obtenir la clé ─── -->
+    <div class="stage">
+      <div class="stage-marker"><span class="stage-letter">A</span> Le dictaphone</div>
+      <div class="morse-player">
+        <button class="play-btn" id="play-morse" onclick="playMorse()" aria-label="Lire le Morse">
+          <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+            <polygon points="4,2 16,9 4,16" fill="white" />
+          </svg>
+        </button>
+        <div style="flex:1">
+          <div style="font-family:'Bebas Neue',sans-serif;font-size:16px;letter-spacing:0.12em;margin-bottom:6px;">
+            Ecouter
+          </div>
+          <div class="morse-dots" id="morse-display"></div>
+          <div
+            style="font-family:'Special Elite',serif;font-size:11px;color:var(--ink-light);margin-top:6px;opacity:0.65">
+            Cliquez ▶ pour la version sonore. Le « / » sépare deux mots.
+          </div>
+        </div>
+      </div>
+      <button class="ref-toggle" onclick="toggleMorseRef()" id="morse-ref-toggle">
+        📖 Afficher l'alphabet Morse
+      </button>
+      <div class="morse-ref" id="morse-ref" style="display:none"></div>
+    </div>
+
+    <div class="arrow-down">▼</div>
+
+    <!-- ─── ÉTAPE B : appliquer la clé au message ─── -->
+    <div class="stage">
+      <div class="stage-marker"><span class="stage-letter">B</span> Le message chiffré</div>
+      <div class="stage-instruction">
+        Une fois la clé en main, déchiffrez ces deux mots. C'est un nom à deux mots.
+      </div>
+      <div class="cipher-box">
+        <div class="cipher-text">EQZMBJ FDGQX</div>
+      </div>
+    </div>
+
+    <button class="btn-hint" id="hint-btn" onclick="showHint()" style="margin-top:24px">
+      J'ai besoin d'un indice (honte à moi)
+    </button>
+    <div id="hint-box" style="display:none" class="callout">
+      💡 Le Morse épelle <strong>« CÉSAR 25 »</strong> - un chiffre de César avec un décalage de 25.
+      Comme l'alphabet a 26 lettres, décaler de 25 vers l'avant revient à reculer d'<em>une seule</em>
+      lettre. Donc pour <strong>déchiffrer</strong> le message, vous devez faire l'inverse :
+      <strong>avancer chaque lettre de 1</strong> (E→F, Q→R, Z→A, M→N…).
+      <br><br>
+      Indice bonus : il a construit un truc tordu à Bilbao. Et à L.A. Et à plein d'endroits.
+    </div>
+
+    <div style="margin-top:24px">
+      <label class="field-label">Nom de l'architecte (Prénom Nom)</label>
+      <input type="text" id="arch-answer" placeholder="Prénom Nom" autocomplete="off" />
+    </div>
+    <div style="margin-top:12px">
+      <button class="btn-big" onclick="validate()">VALIDER</button>
+    </div>
+    <div id="feedback"></div>
+
+    <hr class="rule" style="margin-top:32px" />
+    <div style="display:flex;justify-content:space-between">
+      <a href="03-moto.html" style="font-family:'Special Elite',serif;font-size:13px;color:var(--ink-light);">←
+        Retour</a>
+      <span style="font-family:'Special Elite',serif;font-size:12px;color:var(--ink-light);opacity:0.5">Étape 3/7</span>
+    </div>
+  </div>
+
+  <div id="victory-overlay">
+    <div class="victory-title" id="victory-title">✓ RÉSOLU !</div>
+    <div class="victory-subtitle" id="victory-sub"></div>
+  </div>
+  <div id="juliette-avatar"></div>
+  <div id="jules-avatar"></div>
+
+  <script src="shared.js"></script>
+  <script>
+    checkAccess(3);
+
+    const jules = new PhotoAvatar('jules-avatar', '../uploads/avatar_file-1777938267546.JPG', 'Jules', [
+      "Il vient de sauter dix poteaux à moto, et il se prend pour Champollion. Bastien tout craché.",
+      "D'abord le dictaphone. Il te donne la CLÉ - pas la réponse.",
+      "Son architecte préféré. Il en parle à chaque apéro. Chaque. Apéro.",
+      "Le Morse, c'est juste deux symboles : point et trait. Tu peux y arriver.",
+    ], {
+      correct: ["Franck Gehry ! Putain enfin. Bastien aurait été fier. 🏗️"],
+      wrong: ["Nope. Décode d'abord le Morse pour avoir la clé, puis applique-la au message en bas."],
+      hint: ["Ok. César 25 = recule la lettre d'une position. Donc pour DÉCODER, tu AVANCES de 1."],
+    });
+    const juliette = new PhotoAvatar('juliette-avatar', '../uploads/juliette.png', 'Juliette', [
+      "Arrivé entier après le rodéo de la moto. Bravo. Au boulot maintenant.",
+      "Deux étapes : (A) décoder le Morse, (B) appliquer la clé au message.",
+      "Le Morse épelle deux mots - un classique des chiffres + un nombre.",
+      "Il a fait un truc incroyable à Bilbao 🇪🇸",
+    ], {
+      correct: ["Oui ! Son idole depuis le lycée 😄"],
+      wrong: ["Pas tout à fait. Le Morse te donne la méthode, pas le mot final."],
+      hint: ["César 25, c'est presque comme reculer d'une seule lettre dans l'alphabet."],
+    });
+    setTimeout(() => jules.cycle(), 3500);
+
+    const MORSE = {
+      A: '.-', B: '-...', C: '-.-.', D: '-..', E: '.', F: '..-.', G: '--.', H: '....',
+      I: '..', J: '.---', K: '-.-', L: '.-..', M: '--', N: '-.', O: '---', P: '.--.',
+      Q: '--.-', R: '.-.', S: '...', T: '-', U: '..-', V: '...-', W: '.--', X: '-..-',
+      Y: '-.--', Z: '--..',
+      '0': '-----', '1': '.----', '2': '..---', '3': '...--', '4': '....-',
+      '5': '.....', '6': '-....', '7': '--...', '8': '---..', '9': '----.'
+    };
+
+    const MORSE_MESSAGE = 'CESAR 25';
+
+    function morseEncode(text) {
+      return text.toUpperCase().split('').map(c => c === ' ' ? '/' : (MORSE[c] || '')).join(' ');
+    }
+
+    document.getElementById('morse-display').textContent = morseEncode(MORSE_MESSAGE);
+
+    (function buildMorseRef() {
+      const ref = document.getElementById('morse-ref');
+      const chars = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789'.split('');
+      chars.forEach(c => {
+        const row = document.createElement('span');
+        const label = document.createElement('b');
+        label.textContent = c;
+        row.appendChild(label);
+        row.appendChild(document.createTextNode(MORSE[c]));
+        ref.appendChild(row);
+      });
+    })();
+
+    function playMorse() {
+      try {
+        const actx = new (window.AudioContext || window.webkitAudioContext)();
+        const u = 0.1;
+        let t = actx.currentTime + 0.1;
+        const seq = morseEncode(MORSE_MESSAGE);
+        const btn = document.getElementById('play-morse');
+        btn.style.background = '#f4c842';
+        seq.split('').forEach(c => {
+          if (c === '.' || c === '-') {
+            const o = actx.createOscillator(), g = actx.createGain();
+            o.connect(g); g.connect(actx.destination);
+            o.frequency.value = 640;
+            g.gain.setValueAtTime(0.28, t);
+            o.start(t);
+            t += (c === '.' ? u : u * 3);
+            o.stop(t);
+            g.gain.setValueAtTime(0, t);
+            t += u * 0.5;
+          } else if (c === ' ') {
+            t += u * 1.5;
+          } else if (c === '/') {
+            t += u * 3.5;
+          }
+        });
+        setTimeout(() => btn.style.background = 'var(--red)', (t - actx.currentTime) * 1000 + 200);
+      } catch (e) { console.warn(e); }
+    }
+
+    function toggleMorseRef() {
+      const ref = document.getElementById('morse-ref');
+      const btn = document.getElementById('morse-ref-toggle');
+      const visible = ref.style.display === 'block';
+      ref.style.display = visible ? 'none' : 'block';
+      btn.textContent = visible ? "📖 Afficher l'alphabet Morse" : "📕 Cacher l'alphabet Morse";
+    }
+
+    function showHint() {
+      document.getElementById('hint-box').style.display = 'block';
+      document.getElementById('hint-btn').style.display = 'none';
+      jules.react('hint');
+    }
+
+    function validate() {
+      const a = document.getElementById('arch-answer').value.trim().toLowerCase()
+        .normalize('NFD').replace(/[̀-ͯ]/g, '');
+      const ok = a.includes('gehry') && (a.includes('frank') || a.includes('franck'));
+      const fb = document.getElementById('feedback');
+      if (ok) {
+        jules.react('correct');
+        setTimeout(() => juliette.react('correct'), 600);
+        showVictory("Franck Gehry. Code craqué. Et là, midi pile : Bastien a faim. Il enfile son casque, lance LA playlist. 🎧", () => goToNext(3));
+      } else {
+        jules.react('wrong');
+        fb.textContent = '';
+        const p = document.createElement('p');
+        p.className = 'feedback-err';
+        p.textContent = "Nope. Décode d'abord le Morse pour avoir la clé, puis applique-la au message.";
+        fb.appendChild(p);
+      }
+    }
+
+    document.getElementById('arch-answer').addEventListener('keydown', e => { if (e.key === 'Enter') validate(); });
+  </script>
+</body>
+
+</html>

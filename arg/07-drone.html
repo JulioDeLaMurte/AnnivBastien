@@ -1,0 +1,571 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>ÉTAPE 6 - LE DRONE</title>
+  <link rel="stylesheet" href="shared.css" />
+  <style>
+    .headline-box {
+      border: 3px solid var(--ink);
+      padding: 12px 18px;
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .step-badge {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 48px;
+      line-height: 1;
+      color: var(--red);
+      flex-shrink: 0;
+    }
+
+    .anecdote-box {
+      border-left: 6px solid var(--red);
+      padding: 12px 16px;
+      background: var(--paper-dark);
+      margin: 20px 0;
+    }
+
+    .anecdote-text {
+      font-family: 'Special Elite', serif;
+      font-size: 15px;
+      line-height: 1.6;
+      color: var(--ink);
+      font-style: italic;
+    }
+
+    .anecdote-src {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 11px;
+      letter-spacing: 0.14em;
+      color: var(--red);
+      margin-top: 6px;
+    }
+
+    .pid-lab {
+      display: grid;
+      grid-template-columns: 220px 1fr;
+      gap: 18px;
+      margin: 22px 0;
+      align-items: stretch;
+    }
+
+    @media (max-width: 620px) {
+      .pid-lab {
+        grid-template-columns: 1fr;
+      }
+
+      .sim-pane {
+        min-height: 320px !important;
+      }
+    }
+
+    .sim-pane {
+      border: 3px solid var(--ink);
+      background: #d4eaf4;
+      box-shadow: 0 4px 0 rgba(0, 0, 0, 0.15);
+      position: relative;
+      min-height: 380px;
+    }
+
+    .sim-pane canvas {
+      display: block;
+      width: 100%;
+      height: 100%;
+    }
+
+    .ctrl-pane {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .trace-box {
+      border: 3px solid var(--ink);
+      background: #faf3df;
+      box-shadow: 0 4px 0 rgba(0, 0, 0, 0.15);
+    }
+
+    .trace-box canvas {
+      display: block;
+      width: 100%;
+      height: 130px;
+    }
+
+    .slider-row {
+      border: 2px solid var(--ink);
+      padding: 6px 12px;
+      background: var(--paper-dark);
+      display: grid;
+      grid-template-columns: 36px 1fr 56px;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .slider-row .label {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 26px;
+      line-height: 1;
+      color: var(--red);
+      letter-spacing: 0.05em;
+    }
+
+    .slider-row .value {
+      font-family: 'Special Elite', serif;
+      font-size: 14px;
+      color: var(--ink);
+      text-align: right;
+    }
+
+    .stability-hud {
+      border: 2px solid var(--ink);
+      padding: 8px 12px 10px;
+      background: var(--paper);
+    }
+
+    .stability-row {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 14px;
+      letter-spacing: 0.12em;
+      color: var(--ink);
+    }
+
+    .stability-row .stab-num {
+      font-family: 'Special Elite', serif;
+      font-size: 13px;
+      color: var(--red);
+      letter-spacing: 0;
+    }
+
+    .stability-bar {
+      width: 100%;
+      height: 8px;
+      background: var(--paper-dark);
+      border: 1px solid var(--ink);
+      margin-top: 6px;
+      overflow: hidden;
+    }
+
+    .stability-fill {
+      height: 100%;
+      background: var(--red);
+      width: 0%;
+      transition: width 0.08s linear;
+    }
+
+    .reset-btn {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 16px;
+      letter-spacing: 0.14em;
+      background: var(--paper);
+      color: var(--ink);
+      border: 2px solid var(--ink);
+      padding: 8px 14px;
+      cursor: pointer;
+      align-self: flex-start;
+    }
+
+    .reset-btn:hover {
+      background: var(--ink);
+      color: var(--paper);
+    }
+
+    .legend {
+      font-family: 'Special Elite', serif;
+      font-size: 12px;
+      color: var(--ink-light);
+      line-height: 1.5;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="newslines"></div>
+  <div class="page">
+
+    <div class="paper-header">
+      <span class="paper-name">LE BASTIEN QUOTIDIEN</span>
+      <span class="paper-date">ÉTAPE 6 / 7 - 22H00</span>
+      <span class="stamp">TUNING</span>
+    </div>
+
+    <div class="headline-box">
+      <span class="step-badge">06</span>
+      <div>
+        <div class="tabloid-title" style="font-size:clamp(24px,4.5vw,52px);">LE DRONE QUI VOL PAS</div>
+        <div class="byline">Projet passion 3 ans - PID toujours pas tunés</div>
+      </div>
+    </div>
+
+    <div class="anecdote-box">
+      <p class="anecdote-text">
+        "Il a promené, roulé, déchiffré, mangé, regardé sa photo des potes - et maintenant
+        il finit comme toujours dans son sous-sol avec ce drone. Trois ans qu'il tune.
+        Trois ans que ça vole pas. Il dit qu'il faut juste 'encore un peu de D'."
+      </p>
+      <p class="anecdote-src">- SOURCES PROCHES DE L'ENQUÊTE</p>
+    </div>
+
+    <p class="body-text">
+      22h. Bastien a rejoint son repaire, sous-sol, lumière jaune, drone posé sur l'établi.
+      Aide-le à tuner les 3 gains de son contrôleur de vol et à faire <strong>flotter</strong> son
+      drone pile à <strong>1 mètre</strong>, stable pendant <strong>3 secondes</strong>.
+      <span class="legend">P = réactivité &nbsp;·&nbsp; I = supprime l'erreur résiduelle &nbsp;·&nbsp; D = calme les
+        oscillations.</span>
+    </p>
+
+    <div class="pid-lab">
+      <div class="sim-pane">
+        <canvas id="sim" width="220" height="380"></canvas>
+      </div>
+
+      <div class="ctrl-pane">
+        <div class="trace-box"><canvas id="trace" width="900" height="160"></canvas></div>
+
+        <div class="slider-row">
+          <span class="label">P</span>
+          <input type="range" id="kp" min="0" max="100" step="1" value="0" />
+          <span class="value" id="kp-v">0</span>
+        </div>
+        <div class="slider-row">
+          <span class="label">I</span>
+          <input type="range" id="ki" min="0" max="40" step="0.5" value="0" />
+          <span class="value" id="ki-v">0.0</span>
+        </div>
+        <div class="slider-row">
+          <span class="label">D</span>
+          <input type="range" id="kd" min="0" max="30" step="0.5" value="0" />
+          <span class="value" id="kd-v">0.0</span>
+        </div>
+
+        <div class="stability-hud">
+          <div class="stability-row">
+            <span>STABILISATION</span>
+            <span class="stab-num" id="stab-num">0.0 / 3.0 s</span>
+          </div>
+          <div class="stability-bar">
+            <div class="stability-fill" id="stab-fill"></div>
+          </div>
+        </div>
+
+        <button class="reset-btn" onclick="resetSim()">↺ RESET DU VOL</button>
+      </div>
+    </div>
+
+    <hr class="rule" style="margin-top:24px" />
+    <div style="display:flex;justify-content:space-between">
+      <a href="06-image.html" style="font-family:'Special Elite',serif;font-size:13px;color:var(--ink-light);">←
+        Retour</a>
+      <span style="font-family:'Special Elite',serif;font-size:12px;color:var(--ink-light);opacity:0.5">Étape 6/7</span>
+    </div>
+  </div>
+
+  <div id="victory-overlay">
+    <div class="victory-title" id="victory-title">✓ RÉSOLU !</div>
+    <div class="victory-subtitle" id="victory-sub"></div>
+  </div>
+  <div id="juliette-avatar"></div>
+  <div id="jules-avatar"></div>
+
+  <script src="shared.js"></script>
+  <script>
+    checkAccess(6);
+
+    const jules = new PhotoAvatar('jules-avatar', '../uploads/avatar_file-1777938267546.JPG', 'Jules', [
+      "On y est. Fin de journée. Chien promené, moto pilotée, code craqué, mer chantée, photo lue. Reste : ce drone.",
+      "PID. Proportionnel, Intégral, Dérivé. Il a passé 3 ans dessus.",
+      "Trop de P : il rebondit. Trop de I : il s'emballe. Trop de D : il rame. Il a essayé les trois.",
+      "Tu vas tuner ses gains en 2 minutes. Lui, 3 ans. Inhumain.",
+    ], {
+      correct: ["Stable. Premier vol réussi en 3 ans. T'es engagé. 🚁✨"],
+      wrong: [],
+    });
+    const juliette = new PhotoAvatar('juliette-avatar', '../uploads/juliette.png', 'Juliette', [
+      "22h. Toute la journée derrière nous, et il termine encore au sous-sol. Évidemment.",
+      "Monte P pour qu'il décolle. Ajoute du D pour calmer. Termine avec I pour viser pile.",
+      "3 secondes pile sur la ligne rouge. C'est tout. C'est rien.",
+      "S'il oscille : descends P ou monte D. S'il sous-vise : monte I doucement.",
+    ], {
+      correct: ["1 mètre, stable, 3 secondes. Officiellement son premier vol. 🍾"],
+      wrong: [],
+    });
+
+    // ── PID simulation ───────────────────────────────────────────────────
+    const TARGET = 1.0;            // m
+    const G = 9.81;                // m/s²
+    const DT = 1 / 60;             // s per step
+    const TOL_POS = 0.05;          // m
+    const TOL_VEL = 0.18;          // m/s
+    const STAB_TARGET = 3.0;       // s
+    const I_LIMIT = 2.5;           // anti-windup
+    const THRUST_MIN = 0;
+    const THRUST_MAX = 28;         // m/s² (~3g)
+    const TRACE_WINDOW = 6.0;      // s
+
+    let Kp = 0, Ki = 0, Kd = 0;
+    let y = 0, v = 0, Iacc = 0;
+    let simT = 0;
+    let stable = 0;
+    let resolved = false;
+    let trace = []; // [{t, y}]
+
+    const simCv = document.getElementById('sim');
+    const sctx = simCv.getContext('2d');
+    const traceCv = document.getElementById('trace');
+    const tctx = traceCv.getContext('2d');
+
+    function readSliders() {
+      Kp = parseFloat(document.getElementById('kp').value);
+      Ki = parseFloat(document.getElementById('ki').value);
+      Kd = parseFloat(document.getElementById('kd').value);
+      document.getElementById('kp-v').textContent = Kp.toFixed(0);
+      document.getElementById('ki-v').textContent = Ki.toFixed(1);
+      document.getElementById('kd-v').textContent = Kd.toFixed(1);
+    }
+    ['kp', 'ki', 'kd'].forEach(id =>
+      document.getElementById(id).addEventListener('input', readSliders));
+    readSliders();
+
+    function step() {
+      const err = TARGET - y;
+      const u_raw = Kp * err + Ki * Iacc + Kd * (-v);
+      const thrust = Math.max(THRUST_MIN, Math.min(THRUST_MAX, u_raw));
+
+      // Conditional integration (anti-windup): don't integrate when saturated
+      // in the direction that would worsen saturation.
+      const saturatedHigh = u_raw > THRUST_MAX && err > 0;
+      const saturatedLow = u_raw < THRUST_MIN && err < 0;
+      if (!saturatedHigh && !saturatedLow) {
+        Iacc += err * DT;
+        if (Iacc > I_LIMIT) Iacc = I_LIMIT;
+        if (Iacc < -I_LIMIT) Iacc = -I_LIMIT;
+      }
+
+      const a = thrust - G;
+      v += a * DT;
+      y += v * DT;
+
+      if (y < 0) { y = 0; if (v < 0) v = 0; }
+      if (y > 2.5) { y = 2.5; if (v > 0) v = 0; }
+
+      simT += DT;
+      trace.push({ t: simT, y });
+      while (trace.length && trace[0].t < simT - TRACE_WINDOW) trace.shift();
+
+      if (Math.abs(err) < TOL_POS && Math.abs(v) < TOL_VEL) stable += DT;
+      else stable = 0;
+
+      if (stable >= STAB_TARGET && !resolved) onSolved();
+    }
+
+    // ── Rendering ────────────────────────────────────────────────────────
+    function drawDrone(ctx, cx, cy, tilt = 0) {
+      ctx.save();
+      ctx.translate(cx, cy);
+      ctx.rotate(tilt);
+      // Arms (X-quad)
+      ctx.strokeStyle = '#1a1208';
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.moveTo(-18, -12); ctx.lineTo(18, 12);
+      ctx.moveTo(-18, 12); ctx.lineTo(18, -12);
+      ctx.stroke();
+      // Body
+      ctx.fillStyle = '#1a1208';
+      ctx.fillRect(-5, -3, 10, 6);
+      // Motors + spinning props
+      const t = performance.now() / 60;
+      const motorPos = [[-18, -12], [18, -12], [-18, 12], [18, 12]];
+      for (let i = 0; i < motorPos.length; i++) {
+        const [mx, my] = motorPos[i];
+        ctx.fillStyle = '#3d3220';
+        ctx.beginPath(); ctx.arc(mx, my, 3.5, 0, Math.PI * 2); ctx.fill();
+        // prop blur - alternate CW/CCW
+        const dir = (i === 1 || i === 2) ? 1 : -1;
+        ctx.strokeStyle = 'rgba(26,18,8,0.45)';
+        ctx.lineWidth = 1.6;
+        ctx.beginPath();
+        ctx.ellipse(mx, my, 9, 1.3, dir * t * 0.05, 0, Math.PI * 2);
+        ctx.stroke();
+      }
+      ctx.restore();
+    }
+
+    function renderSim() {
+      const W = simCv.width, H = simCv.height;
+      // Sky
+      const grad = sctx.createLinearGradient(0, 0, 0, H);
+      grad.addColorStop(0, '#bcdcef');
+      grad.addColorStop(1, '#e3eef5');
+      sctx.fillStyle = grad;
+      sctx.fillRect(0, 0, W, H);
+
+      const groundY = H - 28;
+      const ceilingY = 18;
+      const yMaxView = 1.8; // m
+      const scale = (groundY - ceilingY) / yMaxView;
+      const targetPx = groundY - TARGET * scale;
+
+      // Tolerance band
+      sctx.fillStyle = 'rgba(192,57,43,0.13)';
+      sctx.fillRect(0, targetPx - TOL_POS * scale, W, 2 * TOL_POS * scale);
+
+      // Target line
+      sctx.strokeStyle = '#c0392b';
+      sctx.lineWidth = 2;
+      sctx.setLineDash([6, 4]);
+      sctx.beginPath();
+      sctx.moveTo(0, targetPx);
+      sctx.lineTo(W, targetPx);
+      sctx.stroke();
+      sctx.setLineDash([]);
+
+      sctx.fillStyle = '#c0392b';
+      sctx.font = "bold 11px 'DM Sans',sans-serif";
+      sctx.fillText('CIBLE  1.00 m', 8, targetPx - 5);
+
+      // Altitude ticks
+      sctx.strokeStyle = 'rgba(26,18,8,0.18)';
+      sctx.fillStyle = 'rgba(26,18,8,0.55)';
+      sctx.font = "9px 'DM Sans',sans-serif";
+      for (let m = 0; m <= 1.5; m += 0.5) {
+        const py = groundY - m * scale;
+        sctx.beginPath();
+        sctx.moveTo(W - 28, py); sctx.lineTo(W - 18, py);
+        sctx.stroke();
+        sctx.fillText(m.toFixed(1), W - 14, py + 3);
+      }
+
+      // Ground
+      sctx.fillStyle = '#cfa97a';
+      sctx.fillRect(0, groundY, W, H - groundY);
+      sctx.fillStyle = '#3d3220';
+      for (let x = 0; x < W; x += 8) {
+        sctx.fillRect(x, groundY, 4, 2);
+      }
+      sctx.strokeStyle = '#1a1208';
+      sctx.lineWidth = 2;
+      sctx.beginPath();
+      sctx.moveTo(0, groundY); sctx.lineTo(W, groundY); sctx.stroke();
+
+      // Drone - slight tilt based on velocity
+      const droneY = groundY - y * scale;
+      const tilt = Math.max(-0.25, Math.min(0.25, -v * 0.08));
+      drawDrone(sctx, W / 2, droneY, tilt);
+
+      // Live readout (top-left)
+      sctx.fillStyle = 'rgba(255,255,255,0.85)';
+      sctx.fillRect(6, 6, 92, 36);
+      sctx.strokeStyle = '#1a1208';
+      sctx.lineWidth = 1.5;
+      sctx.strokeRect(6, 6, 92, 36);
+      sctx.fillStyle = '#1a1208';
+      sctx.font = "bold 11px 'Bebas Neue',sans-serif";
+      sctx.fillText(`ALT  ${y.toFixed(2)} m`, 12, 20);
+      sctx.fillText(`VIT  ${v >= 0 ? '+' : ''}${v.toFixed(2)} m/s`, 12, 34);
+    }
+
+    function renderTrace() {
+      const W = traceCv.width, H = traceCv.height;
+      tctx.fillStyle = '#faf3df';
+      tctx.fillRect(0, 0, W, H);
+
+      const yMin = -0.05, yMax = 1.7;
+      const yScale = H / (yMax - yMin);
+      const yPx = (val) => H - (val - yMin) * yScale;
+
+      // Grid
+      tctx.strokeStyle = 'rgba(26,18,8,0.10)';
+      tctx.lineWidth = 1;
+      for (let m = 0; m <= 1.5; m += 0.5) {
+        tctx.beginPath();
+        tctx.moveTo(0, yPx(m)); tctx.lineTo(W, yPx(m));
+        tctx.stroke();
+      }
+      // Time grid (every second)
+      tctx.strokeStyle = 'rgba(26,18,8,0.06)';
+      for (let s = 1; s < TRACE_WINDOW; s++) {
+        const x = W * (1 - s / TRACE_WINDOW);
+        tctx.beginPath();
+        tctx.moveTo(x, 0); tctx.lineTo(x, H); tctx.stroke();
+      }
+
+      // Tolerance band
+      tctx.fillStyle = 'rgba(192,57,43,0.12)';
+      tctx.fillRect(0, yPx(TARGET + TOL_POS), W,
+        yPx(TARGET - TOL_POS) - yPx(TARGET + TOL_POS));
+
+      // Target line
+      tctx.strokeStyle = '#c0392b';
+      tctx.lineWidth = 1.5;
+      tctx.setLineDash([5, 3]);
+      tctx.beginPath();
+      tctx.moveTo(0, yPx(TARGET)); tctx.lineTo(W, yPx(TARGET));
+      tctx.stroke();
+      tctx.setLineDash([]);
+
+      // Trace
+      if (trace.length > 1) {
+        tctx.strokeStyle = '#1a1208';
+        tctx.lineWidth = 2;
+        tctx.beginPath();
+        for (let i = 0; i < trace.length; i++) {
+          const p = trace[i];
+          const x = W - (simT - p.t) * W / TRACE_WINDOW;
+          const py = yPx(p.y);
+          if (i === 0) tctx.moveTo(x, py);
+          else tctx.lineTo(x, py);
+        }
+        tctx.stroke();
+      }
+
+      // Labels
+      tctx.fillStyle = 'rgba(26,18,8,0.6)';
+      tctx.font = "10px 'DM Sans',sans-serif";
+      tctx.fillText('altitude (m)', 8, 14);
+      tctx.fillText('-6 s', 8, H - 4);
+      tctx.fillText('maintenant', W - 64, H - 4);
+    }
+
+    function tickHUD() {
+      const pct = Math.min(100, 100 * stable / STAB_TARGET);
+      document.getElementById('stab-fill').style.width = pct + '%';
+      document.getElementById('stab-num').textContent =
+        `${stable.toFixed(1)} / ${STAB_TARGET.toFixed(1)} s`;
+    }
+
+    function loop() {
+      if (!resolved) step();
+      renderSim();
+      renderTrace();
+      tickHUD();
+      requestAnimationFrame(loop);
+    }
+
+    function resetSim() {
+      y = 0; v = 0; Iacc = 0; simT = 0; stable = 0; trace = [];
+    }
+
+    function onSolved() {
+      resolved = true;
+      jules.react('correct');
+      setTimeout(() => juliette.react('correct'), 600);
+      showVictory(
+        "PID stables. Premier vol en 3 ans. La journée est finie - temps de faire le bilan. 📰",
+        () => goToNext(6)
+      );
+    }
+
+    requestAnimationFrame(loop);
+  </script>
+</body>
+
+</html>
