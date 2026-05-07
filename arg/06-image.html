@@ -16,7 +16,10 @@
       overflow: hidden;
     }
 
-    #img-canvas { width: 100%; display: block; }
+    #img-canvas {
+      width: 100%;
+      display: block;
+    }
 
     #canvas-loading {
       position: absolute;
@@ -54,9 +57,20 @@
       user-select: none;
     }
 
-    .ch-label.R { color: #aa1111; border-color: #aa1111; }
-    .ch-label.G { color: #116611; border-color: #116611; }
-    .ch-label.B { color: #1122bb; border-color: #1122bb; }
+    .ch-label.R {
+      color: #aa1111;
+      border-color: #aa1111;
+    }
+
+    .ch-label.G {
+      color: #116611;
+      border-color: #116611;
+    }
+
+    .ch-label.B {
+      color: #1122bb;
+      border-color: #1122bb;
+    }
 
     .ch-val {
       font-family: monospace;
@@ -66,10 +80,22 @@
       min-width: 36px;
     }
 
-    input[type=range].r-sl { accent-color: #aa1111; }
-    input[type=range].g-sl { accent-color: #116611; }
-    input[type=range].b-sl { accent-color: #1122bb; }
-    input[type=range] { width: 100%; cursor: pointer; }
+    input[type=range].r-sl {
+      accent-color: #aa1111;
+    }
+
+    input[type=range].g-sl {
+      accent-color: #116611;
+    }
+
+    input[type=range].b-sl {
+      accent-color: #1122bb;
+    }
+
+    input[type=range] {
+      width: 100%;
+      cursor: pointer;
+    }
 
     .reset-btn {
       font-family: 'Special Elite', serif;
@@ -82,7 +108,10 @@
       letter-spacing: 0.05em;
       margin-bottom: 20px;
     }
-    .reset-btn:hover { background: var(--paper-dark); }
+
+    .reset-btn:hover {
+      background: var(--paper-dark);
+    }
 
     .filter-sep {
       font-family: 'Bebas Neue', sans-serif;
@@ -93,10 +122,24 @@
       padding-top: 10px;
       margin-bottom: 4px;
     }
-    input[type=range].c-sl { accent-color: #555; }
-    input[type=range].l-sl { accent-color: #888; }
-    .ch-label.C { color: #444; border-color: #444; }
-    .ch-label.L { color: #666; border-color: #666; }
+
+    input[type=range].c-sl {
+      accent-color: #555;
+    }
+
+    input[type=range].l-sl {
+      accent-color: #888;
+    }
+
+    .ch-label.C {
+      color: #444;
+      border-color: #444;
+    }
+
+    .ch-label.L {
+      color: #666;
+      border-color: #666;
+    }
 
     .headline-box {
       border: 3px solid var(--ink);
@@ -124,23 +167,24 @@
     <div class="paper-header">
       <span class="paper-name">LE BASTIEN QUOTIDIEN</span>
       <span class="paper-date">ETAPE 5 / 7 &mdash; 15H00</span>
-      <span class="stamp">D&Eacute;CRYPTER</span>
+      <span class="stamp">DéCRYPTER</span>
     </div>
 
     <div class="headline-box">
       <span class="step-badge">05</span>
       <div>
         <div class="tabloid-title" style="font-size:clamp(24px,4.5vw,50px);">LA PHOTO DES POTES</div>
-        <div class="byline">St&eacute;ganographie &mdash; un cadeau planqu&eacute; dans les pixels</div>
+        <div class="byline">Stéganographie &mdash; un cadeau planqué dans les pixels</div>
       </div>
     </div>
 
     <p class="body-text">
-      Retour au bureau, lourd du d&eacute;jeuner. Sur le coin de la table de Bastien tr&ocirc;ne
-      <strong>la photo de lui et de ses potes</strong> &mdash; celle qu'il garde l&agrave; depuis des ann&eacute;es.
-      Sauf que ses amis ne sont pas innocents : ils y ont planqu&eacute; un message pour ses 25 ans,
-      enfoui quelque part dans les pixels. Manipule les <strong>canaux de couleur et les filtres d&rsquo;image</strong>
-      pour trouver la bonne combinaison de r&eacute;glages et r&eacute;v&eacute;ler ce qu&rsquo;ils lui ont laiss&eacute;.
+      Retour au bureau, lourd du déjeuner. Sur le coin de la table de Bastien trouve
+      <strong>la photo de lui et de ses potes "incroyables ✨"</strong>
+      Sauf que ses amis ne sont pas innocents : ils y ont planqué un message pour ses 25 ans,
+      enfoui quelque part dans les pixels. Manipule les <strong>canaux de couleur et les filtres d'image</strong>
+      pour trouver la bonne combinaison de réglages et révéler ce qu'ils lui ont
+      laissé.
     </p>
 
     <div class="canvas-wrapper">
@@ -178,10 +222,10 @@
         <span class="ch-val" id="val-L">100%</span>
       </div>
     </div>
-    <button class="reset-btn" onclick="resetSliders()">Remettre &agrave; z&eacute;ro</button>
+    <button class="reset-btn" onclick="resetSliders()">Remettre à zéro</button>
 
     <div>
-      <label class="field-label">Mot r&eacute;v&eacute;l&eacute;</label>
+      <label class="field-label">Mot révélé</label>
       <input type="text" id="code-answer" placeholder="Tape ce que tu vois..." autocomplete="off" />
     </div>
     <div style="margin-top:12px"><button class="btn-big" onclick="validate()">VALIDER</button></div>
@@ -189,13 +233,14 @@
 
     <hr class="rule" style="margin-top:32px" />
     <div style="display:flex;justify-content:space-between">
-      <a href="05-music.html" style="font-family:'Special Elite',serif;font-size:13px;color:var(--ink-light);">&larr; Retour</a>
+      <a href="05-music.html" style="font-family:'Special Elite',serif;font-size:13px;color:var(--ink-light);">&larr;
+        Retour</a>
       <span style="font-family:'Special Elite',serif;font-size:12px;color:var(--ink-light);opacity:0.5">Etape 5/7</span>
     </div>
   </div>
 
   <div id="victory-overlay">
-    <div class="victory-title" id="victory-title">&#10003; R&Eacute;SOLU !</div>
+    <div class="victory-title" id="victory-title">&#10003; RéSOLU !</div>
     <div class="victory-subtitle" id="victory-sub"></div>
   </div>
   <div id="juliette-avatar"></div>
@@ -206,29 +251,31 @@
     checkAccess(5);
 
     const jules = new PhotoAvatar('jules-avatar', '../uploads/avatar_file-1777938267546.JPG', 'Jules', [
-      "C'est nous, ses potes, qui avons planqu&eacute; le truc dedans il y a des mois. Il a jamais rien remarqu&eacute;.",
+      "Qu'est ce qu'on est beau gosses quand même ... ",
       "Trois curseurs. Une bonne combinaison. Trouve-la.",
-      "Les couleurs peuvent r&eacute;v&eacute;ler ou cacher la v&eacute;rit&eacute;. Surtout quand des amis s'en m&ecirc;lent.",
-      "Essaie d'isoler une seule couleur&hellip;",
+      "Les couleurs peuvent révéler ou cacher la réponse.",
+      "Essaie d'isoler une seule couleur",
     ], {
-      correct: ["VINGT-CINQ &mdash; bien jou&eacute;. La photo lui rappellera qu'on l'aime, m&ecirc;me en steg. 🔍"],
-      wrong:   ["Pas encore. Joue encore avec les curseurs."],
-      hint:    ["Essaie d'amener un canal au maximum et les autres &agrave; z&eacute;ro."],
-    });
+      correct: ["VINGT-CINQ &mdash; bien joué. La photo lui rappellera qu'on l'aime, m&ecirc;me en steg. 🔍"],
+      wrong: ["Pas encore. Joue encore avec les curseurs."],
+      hint: ["Essaie d'amener un canal au maximum et les autres à zéro."],
+    }, { initialDelay: 4000 });
 
     const juliette = new PhotoAvatar('juliette-avatar', '../uploads/juliette.png', 'Juliette', [
-      "C'est sa photo pr&eacute;f&eacute;r&eacute;e du bureau. Lui et la bande. Il la regarde tous les jours.",
-      "Ses potes lui ont laiss&eacute; un mot dans les pixels. Romantique, non ?",
-      "Rouge ? Vert ? Bleu ? La bonne combinaison r&eacute;v&egrave;le tout.",
-      "Isole les canaux. Un mot va appara&icirc;tre.",
+      "2019, Ca nous rajeunit pas...",
+      "Bon bastien c'est long là ...",
+      "Rouge ? Vert ? Bleu ? La bonne combinaison c'est ... ",
+      "YOU CAN DO IT !",
     ], {
-      correct: ["VINGT-CINQ ! Joli cadeau planqu&eacute; dans les pixels 🎉"],
-      wrong:   ["Cherche encore. Le bon r&eacute;glage fait tout apparaitre."],
-    });
+      correct: ["VINGT-CINQ ! Joli cadeau planqué dans les pixels 🎉"],
+      wrong: ["Cherche encore. Le bon réglage fait tout apparaitre."],
+    }, { initialDelay: 14000 });
+    setTimeout(() => jules.cycle(), 28000);
+    setTimeout(() => juliette.cycle(), 42000);
 
-    /* ---- st&eacute;ganographie : texte inject&eacute; dans le canal rouge ----
-       R_BOOST : valeur ajout&eacute;e au canal R des pixels du texte.
-       Visible uniquement quand R est isol&eacute; (G=0, B=0).          */
+    /* ---- stéganographie : texte injecté dans le canal rouge ----
+       R_BOOST : valeur ajoutée au canal R des pixels du texte.
+       Visible uniquement quand R est isolé (G=0, B=0).          */
     const HIDDEN_WORD = 'VINGT-CINQ -- B.25.2001';
     const R_BOOST = 22;
 
@@ -245,7 +292,7 @@
       mc.width = w; mc.height = h;
       var mctx = mc.getContext('2d');
 
-      /* texte plus petit : ~13% de la hauteur, plafonn&eacute; &agrave; 70px */
+      /* texte plus petit : ~13% de la hauteur, plafonné à 70px */
       var fs = Math.min(Math.floor(h * 0.06), 30);
       mctx.font = '400 ' + fs + 'px "Special Elite", "Courier New", monospace';
       var tw = mctx.measureText(HIDDEN_WORD).width;
@@ -259,8 +306,8 @@
       mctx.fillText(HIDDEN_WORD, Math.max(12, Math.floor(w * 0.015)), Math.max(10, Math.floor(h * 0.015)));
 
       var mask = mctx.getImageData(0, 0, w, h).data;
-      var img  = ctx.getImageData(0, 0, w, h);
-      var d    = img.data;
+      var img = ctx.getImageData(0, 0, w, h);
+      var d = img.data;
 
       for (var i = 0; i < d.length; i += 4) {
         var cov = mask[i] / 255;
@@ -274,8 +321,8 @@
 
     function init() {
       var img = new Image();
-      img.onload = function() {
-        canvas.width  = img.naturalWidth;
+      img.onload = function () {
+        canvas.width = img.naturalWidth;
         canvas.height = img.naturalHeight;
         ctx.drawImage(img, 0, 0);
         embedText();
@@ -285,7 +332,7 @@
 
     document.fonts.ready.then(init);
 
-    /* ---- rendu en temps r&eacute;el ---- */
+    /* ---- rendu en temps réel ---- */
     function onSlider() {
       var r = parseInt(document.getElementById('sl-R').value);
       var g = parseInt(document.getElementById('sl-G').value);
@@ -312,19 +359,19 @@
       );
       var d = clone.data;
       for (var i = 0; i < d.length; i += 4) {
-        d[i]   = Math.round(d[i]   * rf);
-        d[i+1] = Math.round(d[i+1] * gf);
-        d[i+2] = Math.round(d[i+2] * bf);
+        d[i] = Math.round(d[i] * rf);
+        d[i + 1] = Math.round(d[i + 1] * gf);
+        d[i + 2] = Math.round(d[i + 2] * bf);
       }
       ctx.putImageData(clone, 0, 0);
     }
 
     function resetSliders() {
-      ['R','G','B'].forEach(function(c) {
+      ['R', 'G', 'B'].forEach(function (c) {
         document.getElementById('sl-' + c).value = 100;
         document.getElementById('val-' + c).textContent = '100%';
       });
-      ['C','L'].forEach(function(c) {
+      ['C', 'L'].forEach(function (c) {
         document.getElementById('sl-' + c).value = 100;
         document.getElementById('val-' + c).textContent = '100%';
       });
@@ -335,13 +382,12 @@
     function validate() {
       var raw = document.getElementById('code-answer').value.trim().toLowerCase();
       raw = raw.normalize('NFD').replace(/[̀-ͯ]/g, '').replace(/[-_\s]+/g, ' ');
-      var ok = ['vingt cinq', '25'].some(function(x) { return raw.includes(x); });
+      var ok = ['vingt cinq', '25'].some(function (x) { return raw.includes(x); });
       var fb = document.getElementById('feedback');
       fb.textContent = '';
       if (ok) {
         jules.react('correct');
-        setTimeout(function() { juliette.react('correct'); }, 600);
-        showVictory('VINGT-CINQ &mdash; ses potes l\'ont marqu&eacute;. Fin de journ&eacute;e : il rentre, descend au sous-sol. Le drone l\'attend. 🚁', function() { goToNext(5); });
+        showVictory('VINGT-CINQ &mdash; ses potes l\'ont marqué. Fin de journée : il rentre, descend au sous-sol. Le drone l\'attend. 🚁', function () { goToNext(5); });
       } else {
         jules.react('wrong');
         var p = document.createElement('p');
@@ -351,7 +397,7 @@
       }
     }
 
-    document.getElementById('code-answer').addEventListener('keydown', function(e) {
+    document.getElementById('code-answer').addEventListener('keydown', function (e) {
       if (e.key === 'Enter') validate();
     });
   </script>

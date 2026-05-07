@@ -436,24 +436,25 @@
     checkAccess(4);
 
     const jules = new PhotoAvatar('jules-avatar', '../uploads/avatar_file-1777938267546.JPG', 'Jules', [
-      "Pause déj' méritée. Il a survécu à la moto et déchiffré son grimoire. Il s'octroie l'opéra rock.",
-      "Cette playlist, il l'a depuis ses 17 ans. Huit ans qu'il l'écoute. Huit. Ans.",
+      "Pause déj'  méritée. Il a survécu à la moto et déchiffré son grimoire. Il s'octroie l'opéra rock.",
       "Mets le son. Tu vas reconnaître l'instru direct.",
       "Y'a une question dans la chanson. Trouve la réponse.",
     ], {
       correct: ["LA MER ! Étoile, cheval, araignée, éléphant - tous de mer. 🌊"],
       wrong: ["Non. Réécoute les quatre animaux. Le mot qui les relie."],
       hint: ["Ok : étoile de ___, cheval de ___, araignée de ___, éléphant de ___. Même mot."],
-    });
+    }, { initialDelay: 4000 });
     const juliette = new PhotoAvatar('juliette-avatar', '../uploads/juliette.png', 'Juliette', [
-      "Il déjeune en hurlant du Mozart-métal. Voilà. C'est ça, Bastien à midi.",
+      "Imagine quelqu'un a mozart l'opéra rock dans sa voiture ...",
       "L'instrumental tu vas le reconnaître. Les paroles... bonne écoute.",
       "Concentre-toi sur les quatre animaux qu'il cite.",
       "C'est une charade. Le complément commun à tous les animaux.",
     ], {
       correct: ["La mer ! Bonne pêche. 🐟"],
       wrong: ["Pas tout à fait. Pense à ce qui suit chaque animal."],
-    });
+    }, { initialDelay: 14000 });
+    setTimeout(() => jules.cycle(), 28000);
+    setTimeout(() => juliette.cycle(), 42000);
 
     function showHint() {
       document.getElementById('hint-box').style.display = 'block';
@@ -478,7 +479,6 @@
       const fb = document.getElementById('feedback');
       if (ok) {
         jules.react('correct');
-        setTimeout(() => juliette.react('correct'), 600);
         showVictory("LA MER ! Pause finie, retour au bureau. Sur le coin de la table : la photo de ses potes. Quelque chose cloche dans les pixels. 🖼️", () => goToNext(4));
       } else {
         jules.react('wrong');

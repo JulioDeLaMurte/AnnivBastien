@@ -209,22 +209,21 @@
 
     const jules = new PhotoAvatar('jules-avatar', '../uploads/avatar_file-1777938267546.JPG', 'Jules', [
       "08h15. Il quitte la maison. Le chien dort déjà. Le casque, lui, est sur la tête.",
-      "Il roule trop vite. Je compte même plus les PV, c'est trop déprimant.",
-      "Saute. Lui il saute jamais les limitations de vitesse. Si si il les saute.",
-      "Et compte les piafs. Discrètement. Personne te dira combien il y en a.",
+      "Il roule trop vite. Je compte même plus les PV",
+      "Et compte les piafs. Personne te dira combien il y en a.",
     ], {
       correct: ["Exact ! Le bon nombre d'oiseaux. Bon compteur. Mauvais conducteur. 🐦"],
       wrong: ["Raté. Recompte. Et essaie de pas mourir cette fois."],
-    });
+    }, { initialDelay: 4000 });
     const juliette = new PhotoAvatar('juliette-avatar', '../uploads/juliette.png', 'Juliette', [
-      "Après la promenade, le sport extrême : sa moto.",
+      "Après la promenade, le sport extrême : sa moto. J'ai prié à chaque feu rouge.",
       "ESPACE pour sauter ! Et garde un œil sur le ciel, hein.",
-      "Un seul obstacle touché et c'est game over. Joli.",
+      "Un seul obstacle touché et c'est game over. Comme son triangle de direction 🤣",
       "60 secondes pour rejoindre le bureau. Tu peux y arriver. Enfin j'espère.",
     ], {
-      correct: ["Bien joué ! Tu as un meilleur sens de l'observation que lui sur sa moto. 😅"],
+      correct: ["Bien joué !😅"],
       wrong: ["Recompte ! Les oiseaux passent vite, mais ils passent."],
-    });
+    }, { initialDelay: 14000 });
 
     // ========== Game constants ==========
     const W = 800, H = 220;
@@ -912,7 +911,6 @@
       }
       if (ans === birdCount) {
         jules.react('correct');
-        setTimeout(() => juliette.react('correct'), 600);
         showVictory(`Exact ! ${birdCount} oiseaux. Arrivé au bureau en un morceau. Et qu'est-ce qui traîne sur son bureau ? 🕵️`, () => goToNext(2));
       } else {
         jules.react('wrong');

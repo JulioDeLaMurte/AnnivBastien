@@ -208,14 +208,13 @@
     <div class="anecdote-box">
       <p class="anecdote-text">
         "Il a promené, roulé, déchiffré, mangé, regardé sa photo des potes - et maintenant
-        il finit comme toujours dans son sous-sol avec ce drone. Trois ans qu'il tune.
-        Trois ans que ça vole pas. Il dit qu'il faut juste 'encore un peu de D'."
+        il s'affaire à réparer son drone. Des témoignages indiquent que cela fait trois ans qu'il ne vole plus."
       </p>
       <p class="anecdote-src">- SOURCES PROCHES DE L'ENQUÊTE</p>
     </div>
 
     <p class="body-text">
-      22h. Bastien a rejoint son repaire, sous-sol, lumière jaune, drone posé sur l'établi.
+      22h. Bastien a rejoint son appart', posé sur son bureau.
       Aide-le à tuner les 3 gains de son contrôleur de vol et à faire <strong>flotter</strong> son
       drone pile à <strong>1 mètre</strong>, stable pendant <strong>3 secondes</strong>.
       <span class="legend">P = réactivité &nbsp;·&nbsp; I = supprime l'erreur résiduelle &nbsp;·&nbsp; D = calme les
@@ -280,14 +279,13 @@
     checkAccess(6);
 
     const jules = new PhotoAvatar('jules-avatar', '../uploads/avatar_file-1777938267546.JPG', 'Jules', [
-      "On y est. Fin de journée. Chien promené, moto pilotée, code craqué, mer chantée, photo lue. Reste : ce drone.",
-      "PID. Proportionnel, Intégral, Dérivé. Il a passé 3 ans dessus.",
+      "Bon quand est ce qu'on le voit voler ce drone ?!",
+      "PID. Proportionnel, Intégral, Dérivé. Remember les cours de S.I.",
       "Trop de P : il rebondit. Trop de I : il s'emballe. Trop de D : il rame. Il a essayé les trois.",
-      "Tu vas tuner ses gains en 2 minutes. Lui, 3 ans. Inhumain.",
     ], {
       correct: ["Stable. Premier vol réussi en 3 ans. T'es engagé. 🚁✨"],
       wrong: [],
-    });
+    }, { initialDelay: 4000 });
     const juliette = new PhotoAvatar('juliette-avatar', '../uploads/juliette.png', 'Juliette', [
       "22h. Toute la journée derrière nous, et il termine encore au sous-sol. Évidemment.",
       "Monte P pour qu'il décolle. Ajoute du D pour calmer. Termine avec I pour viser pile.",
@@ -296,7 +294,9 @@
     ], {
       correct: ["1 mètre, stable, 3 secondes. Officiellement son premier vol. 🍾"],
       wrong: [],
-    });
+    }, { initialDelay: 14000 });
+    setTimeout(() => jules.cycle(), 28000);
+    setTimeout(() => juliette.cycle(), 42000);
 
     // ── PID simulation ───────────────────────────────────────────────────
     const TARGET = 1.0;            // m
@@ -557,7 +557,6 @@
     function onSolved() {
       resolved = true;
       jules.react('correct');
-      setTimeout(() => juliette.react('correct'), 600);
       showVictory(
         "PID stables. Premier vol en 3 ans. La journée est finie - temps de faire le bilan. 📰",
         () => goToNext(6)

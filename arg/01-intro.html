@@ -196,17 +196,17 @@
   <script src="shared.js"></script>
   <script>
     const jules = new PhotoAvatar('jules-avatar', '../uploads/avatar_file-1777938267546.JPG', 'Jules', [
-      "Salut. Moi c'est Jules. Je connais Bastien par cœur. Trop, en fait.",
+      "Salut. Moi c'est Jules. Je connais Bastien depuis le lycée. Allemand avec Mr. Rudolph. Berlin, Londres. Trop de souvenirs.",
       "On va te faire revivre sa journée. Étape par étape. Tu vas voir.",
-      "Mon passage préféré ? Le drone qui vole pas. Trois ans de tuning, zéro vol.",
-      "Juliette m'accompagne pour adoucir mes propos. Bon courage, à elle.",
-    ]);
+      "Mon passage préféré ? Le drone qui vole pas. Trois ans de tuning, zéro vol. Schade, comme dirait l'autre.",
+      "Juliette m'accompagne pour adoucir mes propos. Bon courage à elle.",
+    ], {}, { initialDelay: 4000 });
     const juliette = new PhotoAvatar('juliette-avatar', '../uploads/juliette.png', 'Juliette', [
-      "Coucou ! Moi c'est Juliette. Je suis là pour qu'on soit pas trop méchants.",
-      "On va t'accompagner toute la journée. De 7h30 jusqu'à tard le soir.",
-      "Tout ce qui est écrit ici est 100% vrai. Ou presque. 😬",
-      "Prêt·e ? Sept étapes, sept moments. C'est parti.",
-    ]);
+      "Coucou ! Moi c'est Juliette. J'étais aussi au lycée avec Bastien. Mon préféré du trio (chut).",
+      "On va t'accompagner toute sa journée. De 7h30 jusqu'à tard le soir. Sept étapes.",
+      "Tout est 100% vrai. Sauf quand Jules exagère. Donc 50% vrai en gros. 😬",
+      "Prêt·e ? Sept moments pour humilier le mec qu'on aime le plus. C'est parti.",
+    ], {}, { initialDelay: 16000 });
     setTimeout(() => jules.cycle(), 45000);
     setTimeout(() => juliette.cycle(), 75000);
   </script>

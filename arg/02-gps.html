@@ -79,7 +79,7 @@
       En cette matinée, Bastien qui garde son chien pour la semaine décide de le sortir et de faire une balade autour de
       chez lui à Colmar.
       Malheureusement, alors que qu'il s'arrette pour admirer une superbe <bold>SUZUKI gsxr</bold>, le chien
-      s'échappe. Ce dernier aurait été aperçu près du batiment ci dessous. 
+      s'échappe. Ce dernier aurait été aperçu près du batiment ci dessous.
       Retrouve ce lieu sur Google Maps et entre les coordonnées exactes.
     </p>
 
@@ -122,26 +122,24 @@
     checkAccess(1);
 
     const jules = new PhotoAvatar('jules-avatar', '../uploads/avatar_file-1777938267546.JPG', 'Jules', [
-      "07h30. Premier acte de la journée. Le chien et lui. Dans le froid.",
-      "Google Maps, vue satellite. C'est tout ce qu'il te faut.",
-      "Colmar. Son quartier. Pas loin de chez lui du tout.",
-      "Il fait ça CHAQUE matin. Même endroit. Même heure. C'est touchant et inquiétant.",
+      "Google Maps, vue satellite. Konzentrier dich, comme dirait Rudolph.",
+      "Colmar. Son quartier. Depuis le lycée, il a pas bougé de 200 mètres.",
     ], {
-      correct: ["Exact ! Il y va chaque matin, c'est son rituel sacré. 🐕"],
-      wrong: ["Non... T'es encore loin. Cherche dans son quartier à Colmar."],
-    });
+      correct: ["Exact ! C'est son rituel sacré. 🐕"],
+      wrong: ["Non... Cherche dans son quartier à Colmar. Tu chauffes pas, là."],
+    }, { initialDelay: 4000 });
 
     const juliette = new PhotoAvatar('juliette-avatar', '../uploads/juliette.png', 'Juliette', [
       "GPS activé ! Zone cible : Colmar, Alsace 🗺️",
-      "Il est tellement prévisible c'est presque touchant.",
-      "Latitude + Longitude. Vue satellite. Tu vas trouver !",
+      "Il est tellement prévisible c'est presque attendrissant. Presque.",
+      "Latitude + Longitude. Vue satellite. Je sais que tu vas trouver !",
     ], {
       correct: ["Bastien localisé avec précision ! 📍"],
       wrong: ["Chaud ou froid ? Cherche encore !"],
-    });
+    }, { initialDelay: 14000 });
 
-    setTimeout(() => jules.cycle(), 3000);
-    setTimeout(() => juliette.cycle(), 6500);
+    setTimeout(() => jules.cycle(), 28000);
+    setTimeout(() => juliette.cycle(), 42000);
 
     function validate() {
       const la = parseFloat(document.getElementById('lat').value.replace(',', '.'));
@@ -162,7 +160,6 @@
 
       if (ok) {
         jules.react('correct');
-        setTimeout(() => juliette.react('correct'), 600);
         showVictory("Bastien localisé ! Le chien promené, il rentre chercher sa moto. C'est là que ça se gâte. 🏍️", () => goToNext(1));
       } else {
         jules.react('wrong');

@@ -1,7 +1,7 @@
 // ── Photo Avatar - bouche animée sur canvas ──────────────────────────────────
 
 class PhotoAvatar {
-  constructor(containerId, photoSrc, name, quips, reactions = {}) {
+  constructor(containerId, photoSrc, name, quips, reactions = {}, options = {}) {
     this.id = containerId;
     this.name = name;
     this.quips = quips;
@@ -41,7 +41,12 @@ class PhotoAvatar {
     this.img = new Image();
     this.img.onload = () => {
       this._draw();
-      setTimeout(() => this.showQuip(this.current), 1500 + Math.random() * 800);
+      const delay = (options.initialDelay !== undefined)
+        ? options.initialDelay
+        : 4000 + Math.random() * 2000;
+      if (delay !== false) {
+        setTimeout(() => this.showQuip(this.current), delay);
+      }
     };
     this.img.onerror = () => this._drawPlaceholder();
     this.img.src = photoSrc;
@@ -132,7 +137,7 @@ class PhotoAvatar {
     this.bubbleTimeout = setTimeout(() => {
       bubble.style.display = 'none';
       this.speaking = false;
-    }, 5000);
+    }, 9000);
   }
 
   cycle() {
@@ -281,7 +286,7 @@ class JulesAvatar { // c'est moi (Jules) qui réagis aux actions de Bastien
     this.bubbleTimeout = null;
     this.render();
     // Show first quip after 1.5s
-    setTimeout(() => this.showQuip(0), 1500);
+    setTimeout(() => this.showQuip(0), 4000);
   }
 
   render() {
@@ -309,7 +314,7 @@ class JulesAvatar { // c'est moi (Jules) qui réagis aux actions de Bastien
     if (this.bubbleTimeout) clearTimeout(this.bubbleTimeout);
     this.bubbleTimeout = setTimeout(() => {
       bubble.style.display = 'none';
-    }, 5000);
+    }, 9000);
   }
 
   cycle(expr) {

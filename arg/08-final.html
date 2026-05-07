@@ -202,22 +202,21 @@
     checkAccess(7);
 
     const jules = new PhotoAvatar('jules-avatar', '../uploads/avatar_file-1777938267546.JPG', 'Jules', [
-      "Voilà. Une journée entière de Bastien. T'as tenu. Moi je vis avec ça au quotidien.",
+      "Voilà. Une journée entière de Bastien. T'as tenu. Moi je le supporte depuis le lycée.",
       "Chien, moto, code, mer, photo, drone. Voilà ses 25 ans en six mots.",
-      "On a écrit ça à deux avec Juliette. C'est ridicule, mais c'est de bon cœur.",
-      "Joyeux anniversaire Bastien. T'es vieux. On t'aime quand même. 🎂",
-    ]);
+      "Mr. Rudolph serait fier. Ou inquiet. Probablement les deux.",
+      "Joyeux anniversaire Bastien. T'es vieux. On te garde quand même. 🎂",
+    ], {}, { initialDelay: false });
     const juliette = new PhotoAvatar('juliette-avatar', '../uploads/juliette.png', 'Juliette', [
       "Tu as suivi sa journée du matin au soir. Bravo. 🎉",
-      "Le passage du seau, on est presque désolés. Presque.",
-      "Le passage de la photo, par contre, c'est notre vrai cadeau.",
+      "Le passage de la moto, on est presque désolés. Presque.",
       "Joyeux anniversaire Bastien ! On t'aime fort. 🎂",
-    ]);
+    ], {}, { initialDelay: false });
 
-    setTimeout(() => jules.showQuip(0), 800);
-    setTimeout(() => juliette.showQuip(0), 2000);
-    setTimeout(() => jules.cycle(), 6000);
-    setTimeout(() => juliette.cycle(), 8000);
+    setTimeout(() => jules.showQuip(0), 4000);
+    setTimeout(() => juliette.showQuip(0), 14000);
+    setTimeout(() => jules.cycle(), 28000);
+    setTimeout(() => juliette.cycle(), 42000);
 
     // Confetti
     const canvas = document.getElementById('confetti');

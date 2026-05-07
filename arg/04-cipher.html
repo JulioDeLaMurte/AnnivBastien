@@ -267,26 +267,26 @@
     checkAccess(3);
 
     const jules = new PhotoAvatar('jules-avatar', '../uploads/avatar_file-1777938267546.JPG', 'Jules', [
-      "Il vient de sauter dix poteaux à moto, et il se prend pour Champollion. Bastien tout craché.",
+      "Il vient de sauter dix obstacles à moto, et il se prend pour Champollion.",
       "D'abord le dictaphone. Il te donne la CLÉ - pas la réponse.",
-      "Son architecte préféré. Il en parle à chaque apéro. Chaque. Apéro.",
-      "Le Morse, c'est juste deux symboles : point et trait. Tu peux y arriver.",
+      "Le Morse, c'est deux symboles. Plus simple que les déclinaisons allemandes, promis.",
     ], {
       correct: ["Franck Gehry ! Putain enfin. Bastien aurait été fier. 🏗️"],
       wrong: ["Nope. Décode d'abord le Morse pour avoir la clé, puis applique-la au message en bas."],
       hint: ["Ok. César 25 = recule la lettre d'une position. Donc pour DÉCODER, tu AVANCES de 1."],
-    });
+    }, { initialDelay: 4000 });
     const juliette = new PhotoAvatar('juliette-avatar', '../uploads/juliette.png', 'Juliette', [
-      "Arrivé entier après le rodéo de la moto. Bravo. Au boulot maintenant.",
+      "Arrivé entier après le rodéo de la moto. Petit miracle. Au boulot.",
       "Deux étapes : (A) décoder le Morse, (B) appliquer la clé au message.",
       "Le Morse épelle deux mots - un classique des chiffres + un nombre.",
-      "Il a fait un truc incroyable à Bilbao 🇪🇸",
+      "Il a fait un truc incroyable à Bilbao 🇪🇸.",
     ], {
       correct: ["Oui ! Son idole depuis le lycée 😄"],
       wrong: ["Pas tout à fait. Le Morse te donne la méthode, pas le mot final."],
       hint: ["César 25, c'est presque comme reculer d'une seule lettre dans l'alphabet."],
-    });
-    setTimeout(() => jules.cycle(), 3500);
+    }, { initialDelay: 14000 });
+    setTimeout(() => jules.cycle(), 28000);
+    setTimeout(() => juliette.cycle(), 42000);
 
     const MORSE = {
       A: '.-', B: '-...', C: '-.-.', D: '-..', E: '.', F: '..-.', G: '--.', H: '....',
@@ -368,7 +368,6 @@
       const fb = document.getElementById('feedback');
       if (ok) {
         jules.react('correct');
-        setTimeout(() => juliette.react('correct'), 600);
         showVictory("Franck Gehry. Code craqué. Et là, midi pile : Bastien a faim. Il enfile son casque, lance LA playlist. 🎧", () => goToNext(3));
       } else {
         jules.react('wrong');
