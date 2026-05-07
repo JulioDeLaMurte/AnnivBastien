@@ -43,7 +43,7 @@ class PhotoAvatar {
       this._draw();
       const delay = (options.initialDelay !== undefined)
         ? options.initialDelay
-        : 4000 + Math.random() * 2000;
+        : 6000 + Math.random() * 8000;
       if (delay !== false) {
         setTimeout(() => this.showQuip(this.current), delay);
       }
@@ -137,7 +137,7 @@ class PhotoAvatar {
     this.bubbleTimeout = setTimeout(() => {
       bubble.style.display = 'none';
       this.speaking = false;
-    }, 14000);
+    }, 25000);
   }
 
   cycle() {
@@ -286,7 +286,7 @@ class JulesAvatar { // c'est moi (Jules) qui réagis aux actions de Bastien
     this.bubbleTimeout = null;
     this.render();
     // Show first quip after 1.5s
-    setTimeout(() => this.showQuip(0), 4000);
+    setTimeout(() => this.showQuip(0), 9000);
   }
 
   render() {
