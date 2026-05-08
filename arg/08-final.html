@@ -112,6 +112,179 @@
       pointer-events: none;
       z-index: 999;
     }
+
+    /* ── Gift box ── */
+    .gift-section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      margin: 36px 0 40px;
+    }
+
+    .gift-link {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+      text-decoration: none;
+      color: inherit;
+      cursor: pointer;
+    }
+
+    .gift-wrap {
+      position: relative;
+      animation: gift-idle 2.8s ease-in-out infinite;
+      transition: transform 0.18s ease, box-shadow 0.18s ease;
+    }
+
+    .gift-link:hover .gift-wrap {
+      animation: none;
+      transform: scale(1.07);
+      filter: drop-shadow(4px 4px 0 var(--ink));
+    }
+
+    @keyframes gift-idle {
+      0%,  100% { transform: translateY(0)   rotate(0deg); }
+      25%        { transform: translateY(-7px) rotate(-1.5deg); }
+      60%        { transform: translateY(-3px) rotate(1.2deg); }
+      80%        { transform: translateY(-5px) rotate(-0.6deg); }
+    }
+
+    /* Couvercle */
+    .gift-lid {
+      position: relative;
+      width: 196px;
+      height: 48px;
+      background: var(--paper-dark);
+      border: 3px solid var(--ink);
+      border-bottom: none;
+      margin: 0 auto;
+      margin-bottom: -3px;
+      z-index: 2;
+      overflow: visible;
+    }
+
+    /* Ruban vertical sur le couvercle */
+    .gift-lid .ribbon-v {
+      position: absolute;
+      left: 50%;
+      top: 0;
+      transform: translateX(-50%);
+      width: 10px;
+      height: 100%;
+      background: var(--red);
+      border-left: 1.5px solid rgba(0,0,0,0.25);
+      border-right: 1.5px solid rgba(0,0,0,0.25);
+    }
+
+    /* Nœud */
+    .gift-bow {
+      position: absolute;
+      top: -28px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 72px;
+      height: 32px;
+      z-index: 3;
+    }
+
+    .bow-left,
+    .bow-right {
+      position: absolute;
+      width: 30px;
+      height: 22px;
+      background: var(--red);
+      border: 2px solid var(--ink);
+      border-radius: 50% 50% 50% 0;
+      top: 5px;
+    }
+
+    .bow-left  {
+      left: 2px;
+      transform: rotate(30deg);
+      transform-origin: right center;
+    }
+
+    .bow-right {
+      right: 2px;
+      transform: rotate(-30deg) scaleX(-1);
+      transform-origin: left center;
+    }
+
+    .bow-center {
+      position: absolute;
+      width: 14px;
+      height: 14px;
+      background: var(--red);
+      border: 2px solid var(--ink);
+      border-radius: 50%;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      z-index: 4;
+    }
+
+    /* Corps de la boîte */
+    .gift-box {
+      position: relative;
+      width: 180px;
+      height: 140px;
+      background: var(--yellow);
+      border: 3px solid var(--ink);
+      overflow: hidden;
+      /* subtle inner stripes */
+      background-image: repeating-linear-gradient(
+        90deg,
+        transparent,
+        transparent 17px,
+        rgba(0,0,0,0.04) 17px,
+        rgba(0,0,0,0.04) 18px
+      );
+    }
+
+    .gift-box .ribbon-v {
+      position: absolute;
+      left: 50%;
+      top: 0;
+      transform: translateX(-50%);
+      width: 10px;
+      height: 100%;
+      background: var(--red);
+      border-left: 1.5px solid rgba(0,0,0,0.25);
+      border-right: 1.5px solid rgba(0,0,0,0.25);
+    }
+
+    .gift-box .ribbon-h {
+      position: absolute;
+      top: 38%;
+      left: 0;
+      width: 100%;
+      height: 10px;
+      background: var(--red);
+      border-top: 1.5px solid rgba(0,0,0,0.25);
+      border-bottom: 1.5px solid rgba(0,0,0,0.25);
+    }
+
+    /* Label sous la boîte */
+    .gift-cta {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: clamp(22px, 4vw, 34px);
+      letter-spacing: 0.12em;
+      color: var(--red);
+      margin-top: 20px;
+      transition: letter-spacing 0.18s ease;
+    }
+
+    .gift-link:hover .gift-cta {
+      letter-spacing: 0.22em;
+    }
+
+    .gift-hint {
+      font-family: 'Special Elite', serif;
+      font-size: 13px;
+      color: var(--ink-light);
+      margin-top: 6px;
+      font-style: italic;
+    }
   </style>
 </head>
 
@@ -182,6 +355,31 @@
       style="font-family:'Special Elite',serif;font-size:14px;color:var(--ink-light);text-align:center;margin-top:8px;line-height:1.7;">
       Joyeux anniversaire, Bastien. 🎂
     </p>
+
+    <hr class="rule-double" />
+
+    <div class="black-banner">TON VRAI CADEAU T'ATTEND</div>
+
+    <div class="gift-section">
+      <a class="gift-link" href="../uploads/cadeau.pdf" download="cadeau.pdf">
+        <div class="gift-wrap">
+          <div class="gift-lid">
+            <div class="gift-bow">
+              <span class="bow-left"></span>
+              <span class="bow-right"></span>
+              <span class="bow-center"></span>
+            </div>
+            <div class="ribbon-v"></div>
+          </div>
+          <div class="gift-box">
+            <div class="ribbon-v"></div>
+            <div class="ribbon-h"></div>
+          </div>
+        </div>
+        <div class="gift-cta">CLIQUE POUR OUVRIR</div>
+        <div class="gift-hint">ton cadeau se télécharge directement ici</div>
+      </a>
+    </div>
 
     <hr class="rule" style="margin-top:40px" />
     <div style="text-align:center;margin-top:20px">
