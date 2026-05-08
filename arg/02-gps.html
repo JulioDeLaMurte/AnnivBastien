@@ -125,7 +125,7 @@
       "Google Maps, vue satellite. Konzentrier dich, comme dirait Rudolph.",
       "Nous regarde pas, on va pas te donner le réponse non plus ...",
     ], {
-      correct: ["Exact ! C'est son rituel sacré. 🐕"],
+      correct: ["Exact ! 🐕"],
       wrong: ["Non... Cherche dans son quartier à Colmar. Tu chauffes pas, là."],
     }, { initialDelay: 4000 });
 
@@ -160,7 +160,7 @@
 
       if (ok) {
         jules.react('correct');
-        showVictory("Bastien localisé ! Le chien promené, il rentre chercher sa moto. C'est là que ça se gâte. 🏍️", () => goToNext(1));
+        showVictory("Chien localisé ! Bastien rentre chercher sa moto. C'est là que ça se gâte. 🏍️", () => goToNext(1));
       } else {
         jules.react('wrong');
         const dist = Math.round(Math.sqrt(Math.pow((la - 48.0861) * 111, 2) + Math.pow((lo - 7.3433) * 75, 2)) * 1000);
