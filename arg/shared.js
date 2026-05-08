@@ -1,3 +1,41 @@
+// ── SpeechQueue: serializes avatar bubbles so only one speaks at a time ──────
+const SpeechQueue = {
+  queue: [],
+  active: null,
+  gapTimer: null,
+  GAP_MS: 1500,
+
+  enqueue(task) {
+    if (this.active || this.gapTimer) this.queue.push(task);
+    else this._run(task);
+  },
+
+  interrupt(task) {
+    if (this.active && this.active.cancel) this.active.cancel();
+    if (this.gapTimer) { clearTimeout(this.gapTimer); this.gapTimer = null; }
+    this.queue = [];
+    this.active = null;
+    this._run(task);
+  },
+
+  _run(task) {
+    this.active = task;
+    task.start();
+  },
+
+  finish(task) {
+    if (this.active && task && this.active !== task) return;
+    this.active = null;
+    if (this.queue.length) {
+      const next = this.queue.shift();
+      this.gapTimer = setTimeout(() => {
+        this.gapTimer = null;
+        this._run(next);
+      }, this.GAP_MS);
+    }
+  },
+};
+
 // ── Photo Avatar - bouche animée sur canvas ──────────────────────────────────
 
 class PhotoAvatar {
@@ -123,21 +161,43 @@ class PhotoAvatar {
     }
   }
 
-  showQuip(idx, text) {
+  showQuip(idx, text, opts = {}) {
     const bubble = document.getElementById(this.id + '-bubble');
     if (!bubble) return;
-    bubble.textContent = (text !== undefined) ? text : this.quips[idx % this.quips.length];
-    bubble.style.display = 'block';
-    bubble.style.animation = 'none';
-    void bubble.offsetHeight;
-    bubble.style.animation = 'bubble-pop 0.3s cubic-bezier(0.34,1.56,0.64,1) both';
-    this.speaking = true;
-    if (!this.rafId) this._tick();
-    if (this.bubbleTimeout) clearTimeout(this.bubbleTimeout);
-    this.bubbleTimeout = setTimeout(() => {
-      bubble.style.display = 'none';
-      this.speaking = false;
-    }, 25000);
+    const message = (text !== undefined) ? text : this.quips[idx % this.quips.length];
+    if (!message) return;
+    const duration = Math.max(5000, Math.min(14000, message.length * 75 + 1500));
+
+    const task = {
+      avatar: this,
+      start: () => {
+        bubble.textContent = message;
+        bubble.style.display = 'block';
+        bubble.style.animation = 'none';
+        void bubble.offsetHeight;
+        bubble.style.animation = 'bubble-pop 0.3s cubic-bezier(0.34,1.56,0.64,1) both';
+        this.speaking = true;
+        if (!this.rafId) this._tick();
+        if (this.bubbleTimeout) clearTimeout(this.bubbleTimeout);
+        this.bubbleTimeout = setTimeout(() => {
+          bubble.style.display = 'none';
+          this.speaking = false;
+          this.bubbleTimeout = null;
+          SpeechQueue.finish(task);
+        }, duration);
+      },
+      cancel: () => {
+        if (this.bubbleTimeout) {
+          clearTimeout(this.bubbleTimeout);
+          this.bubbleTimeout = null;
+        }
+        bubble.style.display = 'none';
+        this.speaking = false;
+      },
+    };
+
+    if (opts.priority) SpeechQueue.interrupt(task);
+    else SpeechQueue.enqueue(task);
   }
 
   cycle() {
@@ -148,7 +208,7 @@ class PhotoAvatar {
   react(type) {
     const pool = this.reactions[type];
     if (!pool || !pool.length) return;
-    this.showQuip(0, pool[Math.floor(Math.random() * pool.length)]);
+    this.showQuip(0, pool[Math.floor(Math.random() * pool.length)], { priority: true });
   }
 }
 
