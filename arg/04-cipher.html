@@ -183,8 +183,7 @@
     </p>
 
     <p class="body-text" style="margin-top:8px">
-      Le dictaphone, justement, c'est ça : il vous donne <strong>la méthode pour déchiffrer</strong>,
-      pas la réponse.
+      Le dictaphone, justement, c'est ça : il te donne <strong>la méthode pour déchiffrer</strong> le message.
     </p>
 
     <!-- ─── ÉTAPE A : décoder le Morse pour obtenir la clé ─── -->
@@ -219,7 +218,7 @@
     <div class="stage">
       <div class="stage-marker"><span class="stage-letter">B</span> Le message chiffré</div>
       <div class="stage-instruction">
-        Une fois la clé en main, déchiffrez ces deux mots. C'est un nom à deux mots.
+        Une fois la clé en main, déchiffre ces deux mots.
       </div>
       <div class="cipher-box">
         <div class="cipher-text">EQZMBJ FDGQX</div>
@@ -227,7 +226,7 @@
     </div>
 
     <button class="btn-hint" id="hint-btn" onclick="showHint()" style="margin-top:24px">
-      J'ai besoin d'un indice (honte à moi)
+      J'ai besoin de la réponse (honte à moi)
     </button>
     <div id="hint-box" style="display:none" class="callout">
       💡 Le Morse épelle <strong>« CÉSAR 25 »</strong> - un chiffre de César avec un décalage de 25.
@@ -267,7 +266,7 @@
     checkAccess(3);
 
     const jules = new PhotoAvatar('jules-avatar', '../uploads/avatar_file-1777938267546.JPG', 'Jules', [
-      "Il vient de sauter dix obstacles à moto, et il se prend pour Champollion.",
+      "Allez hop hop hop, t'es chronométré ! (non je déconne, ou pas...)",
       "D'abord le dictaphone. Il te donne la CLÉ - pas la réponse.",
       "Le Morse, c'est deux symboles. Plus simple que les déclinaisons allemandes, promis.",
     ], {
@@ -281,7 +280,7 @@
       "Le Morse épelle deux mots - un classique des chiffres + un nombre.",
       "Il a fait un truc incroyable à Bilbao 🇪🇸.",
     ], {
-      correct: ["Oui ! Son idole depuis le lycée 😄"],
+      correct: ["GG"],
       wrong: ["Pas tout à fait. Le Morse te donne la méthode, pas le mot final."],
       hint: ["César 25, c'est presque comme reculer d'une seule lettre dans l'alphabet."],
     }, { initialDelay: 19000 });
